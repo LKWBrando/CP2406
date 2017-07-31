@@ -1,4 +1,4 @@
-package Week2.DebuggingExercises;
+package Week2.DebuggingExercisesCh02;
 
 public class DebugTwo1
 {

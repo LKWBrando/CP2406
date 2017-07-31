@@ -1,4 +1,4 @@
-package Week1.DebuggingExercises;
+package Week1.DebuggingExercisesCh01;
 import javax.swing.JOptionPane;
 public class DebugOne4 {
   public static void main(String[] args)

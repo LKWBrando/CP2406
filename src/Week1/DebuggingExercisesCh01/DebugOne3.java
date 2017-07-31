@@ -1,4 +1,4 @@
-package Week1.DebuggingExercises;
+package Week1.DebuggingExercisesCh01;
 public class DebugOne3 {
    public static void main(String[] args)
    {
