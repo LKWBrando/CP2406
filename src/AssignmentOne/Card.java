@@ -1,20 +1,30 @@
 package AssignmentOne;
 
 public class Card {
+    private int cardIndex;
     private String mineralName;
-    private int mineralHD;
-    private double mineralSG;
+    private String mineralHD;
+    private String mineralSG;
     private String mineralCleavage;
     private String mineralCA;
     private String mineralEcoValue;
 
-    public Card(String mineralName, int mineralHD, double mineralSG, String mineralCleavage, String mineralCA, String mineralEcoValue){
+    public Card(int cardIndex, String mineralName, String mineralHD, String mineralSG, String mineralCleavage, String mineralCA, String mineralEcoValue){
+        this.cardIndex = cardIndex;
         this.mineralName = mineralName;
         this.mineralHD = mineralHD;
         this.mineralSG = mineralSG;
         this.mineralCleavage = mineralCleavage;
         this.mineralCA = mineralCA;
         this.mineralEcoValue = mineralEcoValue;
+    }
+
+    public int getCardIndex() {
+        return cardIndex;
+    }
+
+    public void setCardIndex(int cardIndex) {
+        this.cardIndex = cardIndex;
     }
 
     public String getMineralName() {
@@ -25,19 +35,19 @@ public class Card {
         this.mineralName = mineralName;
     }
 
-    public int getMineralHD() {
+    public String getMineralHD() {
         return mineralHD;
     }
 
-    public void setMineralHD(int mineralHD) {
+    public void setMineralHD(String mineralHD) {
         this.mineralHD = mineralHD;
     }
 
-    public double getMineralSG() {
+    public String getMineralSG() {
         return mineralSG;
     }
 
-    public void setMineralSG(double mineralSG) {
+    public void setMineralSG(String mineralSG) {
         this.mineralSG = mineralSG;
     }
 
@@ -63,5 +73,10 @@ public class Card {
 
     public void setMineralEcoValue(String mineralEcoValue) {
         this.mineralEcoValue = mineralEcoValue;
+    }
+
+    public String toString(){
+        return "\n Name: " + mineralName + ", Hardness: " + mineralHD + ", SG: " + mineralSG + ", Cleavage: " +
+                mineralCleavage + ", CA: " + mineralCA + ", EV: " + mineralEcoValue;
     }
 }
