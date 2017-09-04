@@ -5,37 +5,47 @@ import java.util.ArrayList;
 public class Player {
     private int playerIndex;
     private ArrayList playerHand;
+    private Boolean playerStatus;
 
     public Player(int playerIndex){
         this.playerIndex = playerIndex;
         this.playerHand = new ArrayList();
+        this.playerStatus = true;
     }
 
     public int getPlayerIndex() {
         return playerIndex;
     }
 
-    public ArrayList getPlayerHand() {
-        return playerHand;
-    }
-
     public void setPlayerIndex(int playerIndex) {
         this.playerIndex = playerIndex;
     }
 
-    public void setPlayerHand(ArrayList playerHand) {
-        this.playerHand = playerHand;
+    public ArrayList getPlayerHand() {
+        return playerHand;
     }
 
-    public void addCard(Card nextCard){
+    public void drawCard(Card nextCard){
         playerHand.add(nextCard);
     }
 
-    /*public void addCard(Card newCard){
-        playerHand.add();
-    }*/
+    public void removeCard(Card nextCard){
+        playerHand.remove(nextCard);
+    }
+
+    public Boolean getPlayerStatus() {
+        return playerStatus;
+    }
+
+    public void setPlayerStatus(Boolean playerStatus) {
+        this.playerStatus = playerStatus;
+    }
 
     public String toString(){
-        return "\n Player: " + playerIndex + " has the following cards: " + playerHand;
-    }
+        String output ="\nPlayer: " + playerIndex + " has the following cards:";
+        for (int x = 0; x< playerHand.size();x++){
+            output = output + "\nCard " + (x+1) + ". "+ playerHand.get(x);
+        }
+        return output;}
+
 }

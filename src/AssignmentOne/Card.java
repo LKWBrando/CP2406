@@ -76,7 +76,7 @@ public class Card {
     }
 
     public String toString(){
-        return "\n Name: " + mineralName + ", Hardness: " + mineralHD + ", SG: " + mineralSG + ", Cleavage: " +
+        return "Name: " + mineralName + ", Hardness: " + mineralHD + ", SG: " + mineralSG + ", Cleavage: " +
                 mineralCleavage + ", CA: " + mineralCA + ", EV: " + mineralEcoValue;
     }
 }

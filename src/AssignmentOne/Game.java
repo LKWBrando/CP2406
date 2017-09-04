@@ -12,6 +12,7 @@ public class Game {
         int totalCardCount = 54;
         int dealCard = 0;
         int playerTurn = 0;
+        int playerSelection = 0;
 
         ArrayList <Card> cardDeck = new ArrayList<Card>();
 
@@ -46,7 +47,7 @@ public class Game {
         for (int x = 1; x <=playerCount; x++){
             for(int y = 0; y<8; y++){
                 dealCard = randInt.nextInt(totalCardCount);
-                playerList.get(playerTurn).addCard(cardDeck.get(dealCard));
+                playerList.get(playerTurn).drawCard(cardDeck.get(dealCard));
                 cardDeck.remove(dealCard);
                 totalCardCount -= 1;}
             playerTurn += 1;}
@@ -55,7 +56,18 @@ public class Game {
             System.out.println(playerList.get(i));
         }
 
-        System.out.println("The amount of cards left in the deck is: " + totalCardCount);
+        System.out.println("The amount of cards left in the deck is: " + totalCardCount +"\n The game is starting! ");
+        System.out.println("*******************************************************************************************");
+
+        /*
+        for (int x =0; x<=playerCount; x++){
+            while (playerList.get(x).getPlayerStatus() == true){
+                System.out.println("Player " + x + "'s Turn! Play or Draw a card!");
+                System.out.println(playerList.get(x).getPlayerHand());
+            }*/
+
+
+
 
     }
 }
