@@ -1,30 +1,20 @@
 package AssignmentOne;
 
 public class Card {
-    private int cardIndex;
     private String mineralName;
-    private String mineralHD;
-    private String mineralSG;
+    private double mineralHD;
+    private double mineralSG;
     private String mineralCleavage;
     private String mineralCA;
     private String mineralEcoValue;
 
-    public Card(int cardIndex, String mineralName, String mineralHD, String mineralSG, String mineralCleavage, String mineralCA, String mineralEcoValue){
-        this.cardIndex = cardIndex;
+    public Card(String mineralName, double mineralHD, double mineralSG, String mineralCleavage, String mineralCA, String mineralEcoValue){
         this.mineralName = mineralName;
         this.mineralHD = mineralHD;
         this.mineralSG = mineralSG;
         this.mineralCleavage = mineralCleavage;
         this.mineralCA = mineralCA;
         this.mineralEcoValue = mineralEcoValue;
-    }
-
-    public int getCardIndex() {
-        return cardIndex;
-    }
-
-    public void setCardIndex(int cardIndex) {
-        this.cardIndex = cardIndex;
     }
 
     public String getMineralName() {
@@ -35,19 +25,19 @@ public class Card {
         this.mineralName = mineralName;
     }
 
-    public String getMineralHD() {
+    public double getMineralHD() {
         return mineralHD;
     }
 
-    public void setMineralHD(String mineralHD) {
+    public void setMineralHD(double mineralHD) {
         this.mineralHD = mineralHD;
     }
 
-    public String getMineralSG() {
+    public double getMineralSG() {
         return mineralSG;
     }
 
-    public void setMineralSG(String mineralSG) {
+    public void setMineralSG(double mineralSG) {
         this.mineralSG = mineralSG;
     }
 

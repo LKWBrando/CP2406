@@ -29,10 +29,6 @@ public class Player {
         playerHand.add(nextCard);
     }
 
-    public void removeCard(Card nextCard){
-        playerHand.remove(nextCard);
-    }
-
     public Boolean getPlayerStatus() {
         return playerStatus;
     }
@@ -42,7 +38,7 @@ public class Player {
     }
 
     public String toString(){
-        String output ="\nPlayer: " + playerIndex + " has the following cards:";
+        String output ="Player: " + playerIndex + " has the following cards:";
         for (int x = 0; x< playerHand.size();x++){
             output = output + "\nCard " + (x+1) + ". "+ playerHand.get(x);
         }
