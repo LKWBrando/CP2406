@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public class Player {
     private int playerIndex;
-    private ArrayList playerHand;
+    private ArrayList <Card>playerHand;
     private Boolean playerStatus;
 
     public Player(int playerIndex){
         this.playerIndex = playerIndex;
-        this.playerHand = new ArrayList();
-        this.playerStatus = true;
+        playerHand = new ArrayList<Card>();
+        playerStatus = true;
     }
 
     public int getPlayerIndex() {
@@ -21,7 +21,7 @@ public class Player {
         this.playerIndex = playerIndex;
     }
 
-    public ArrayList getPlayerHand() {
+    public ArrayList<Card> getPlayerHand() {
         return playerHand;
     }
 
@@ -38,7 +38,7 @@ public class Player {
     }
 
     public String toString(){
-        String output ="Player: " + playerIndex + " has the following cards:";
+        String output ="Player: " + playerIndex + " has the following cards:\n";
         for (int x = 0; x< playerHand.size();x++){
             output = output + "\nCard " + (x+1) + ". "+ playerHand.get(x);
         }
