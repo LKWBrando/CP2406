@@ -5,20 +5,14 @@ import java.util.ArrayList;
 public class Player {
     private int playerIndex;
     private ArrayList <Card>playerHand;
-    private Boolean playerStatus;
+    private Boolean playerGameStatus;
+    private Boolean playerTurnStatus;
 
     public Player(int playerIndex){
         this.playerIndex = playerIndex;
         playerHand = new ArrayList<Card>();
-        playerStatus = true;
-    }
-
-    public int getPlayerIndex() {
-        return playerIndex;
-    }
-
-    public void setPlayerIndex(int playerIndex) {
-        this.playerIndex = playerIndex;
+        playerGameStatus = true;
+        playerTurnStatus = false;
     }
 
     public ArrayList<Card> getPlayerHand() {
@@ -29,12 +23,14 @@ public class Player {
         playerHand.add(nextCard);
     }
 
-    public Boolean getPlayerStatus() {
-        return playerStatus;
+    public Boolean getPlayerGameStatus() {
+        return playerGameStatus;
     }
 
-    public void setPlayerStatus(Boolean playerStatus) {
-        this.playerStatus = playerStatus;
+    public Boolean getPlayerTurnStatus(){return playerTurnStatus; }
+
+    public void setPlayerGameStatus(Boolean playerGameStatus) {
+        this.playerGameStatus = playerGameStatus;
     }
 
     public String toString(){
