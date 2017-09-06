@@ -19,8 +19,8 @@ public class Game {
                 double convMinSG = Double.parseDouble(fileLine[2]);
                 Card newCard = new Card(fileLine[0], convMinHD, convMinSG, fileLine[3], fileLine[4], fileLine[5]);
                 cardDeck.add(newCard);
+            } catch (NumberFormatException error) {
             }
-            catch (NumberFormatException error){}
         }
         inputFile.close();
 
@@ -58,10 +58,11 @@ public class Game {
         System.out.println("*******************************************************************************************");
 
         int playerSelection; //Variable based on player input for card selection from their hand
-        ArrayList <String>finishedPlayerList = new ArrayList<String>(); //Arraylist to store finished players according to their ranking.
+        ArrayList<String> finishedPlayerList = new ArrayList<String>(); //Arraylist to store finished players according to their ranking.
         int finishedPlayers = 0; //Variable used to count the number of finished players.
         int playCategory; // Variable used to store user selection on which Trump category is to be played.
-        int lastPlayerAction =0; //to be replaced to corrent gameplay mechanics.
+        int lastPlayerAction = 0; //to be replaced to corrent gameplay mechanics.
+        int playerTurnCount = 0;
 
         String currentTrump = null; //Variable based on current Trump category in play.
         String currentTrumpName = null; //Variable based on name of the current card in play.
@@ -69,110 +70,130 @@ public class Game {
         String displayCurrentTrumpValue = null; //Variable based on the String values of some of the Trump categories in play.
         Boolean runGame = true; //Boolean Variable used to create an endless loop
 
-        while (runGame){
+        while (runGame) {
             for (int x = 0; x < playerCount; x++) {
                 if (playerList.get(x).getPlayerGameStatus()) {
-                    System.out.println("\nPlayer " + (x + 1) + "'s Turn! \n" + playerList.get(x));
-
-                    //This for the first player to start the game by playing the first card
-                    if (currentTrumpName == null) {
-                        System.out.println("\nYou get to play the first card!");
-                        Scanner firstPlayCard = new Scanner(System.in);
-                        System.out.println("Play a card by selecting the number");
-                        playerSelection = firstPlayCard.nextInt();
-                        Scanner userInputPlayCat = new Scanner(System.in);
-                        System.out.println("You have selected: " + playerList.get(x).getPlayerHand().get(playerSelection - 1).getMineralName() + "\nChoose a playing category: [1] Hardness, [2] SG, [3] Cleavage, [4] CA, [5] EV");
-                        playCategory = userInputPlayCat.nextInt();
-                        currentTrumpName = playerList.get(x).getPlayerHand().get(playerSelection - 1).getMineralName();
-
-                        currentTrump = changeTrump(playCategory);
-                        currentTrumpValue = changeTrumpValue(playCategory, playerList.get(x).getPlayerHand().get(playerSelection-1));
-                        displayCurrentTrumpValue = changeTrumpStringValue(playCategory, playerList.get(x).getPlayerHand().get(playerSelection-1));
-
-                        lastPlayerAction = x;
-                        System.out.println("\nPlayer " + (x + 1) + " has played " + playerList.get(x).getPlayerHand().get(playerSelection - 1));
-                        playerList.get(x).getPlayerHand().remove(playerSelection-1);
-                    }
-                    //This is for subsequent turns where the player is able to play any cards from the hand.
-                    else {
-                        if(lastPlayerAction == x){
-                            System.out.println("\nNo other player has managed to play a card! You are free to play any cards! \nPlay a card by selecting the number.");
-                            Scanner passedTurns = new Scanner(System.in);
-                            playerSelection = passedTurns.nextInt();
+                    System.out.println("\nPlayer " + (x + 1) + "'s Turn! \n");
+                    //If there are still more than one player who is playing the card game
+                    if (!playerList.get(x).getPlayerTurnStatus()) {
+                        System.out.println("You are unable to get a turn! Please wait until all but one player has passed.");
+                    } else {
+                        System.out.println(playerList.get(x));
+                        //This for the first player to start the game by playing the first card
+                        if (currentTrumpName == null) {
+                            System.out.println("\nYou get to play the first card!");
+                            Scanner firstPlayCard = new Scanner(System.in);
+                            System.out.println("Play a card by selecting the number");
+                            playerSelection = firstPlayCard.nextInt();
                             Scanner userInputPlayCat = new Scanner(System.in);
-                            System.out.println("You have selected: " + playerList.get(x).getPlayerHand().get(playerSelection - 1).getMineralName());
-                            System.out.println("Choose a playing category: [1] Hardness, [2] SG, [3] Cleavage, [4] CA, [5] EV");
+                            System.out.println("You have selected: " + playerList.get(x).getPlayerHand().get(playerSelection - 1).getMineralName() + "\nChoose a playing category: [1] Hardness, [2] SG, [3] Cleavage, [4] CA, [5] EV");
                             playCategory = userInputPlayCat.nextInt();
 
-                            //Setting the following variables to reflect the properties of the card that the player has played.
                             currentTrumpName = playerList.get(x).getPlayerHand().get(playerSelection - 1).getMineralName();
                             currentTrump = changeTrump(playCategory);
-                            currentTrumpValue = changeTrumpValue(playCategory, playerList.get(x).getPlayerHand().get(playerSelection-1));
-                            displayCurrentTrumpValue = changeTrumpStringValue(playCategory, playerList.get(x).getPlayerHand().get(playerSelection-1));
+                            currentTrumpValue = changeTrumpValue(playCategory, playerList.get(x).getPlayerHand().get(playerSelection - 1));
+                            displayCurrentTrumpValue = changeTrumpStringValue(playCategory, playerList.get(x).getPlayerHand().get(playerSelection - 1));
 
-                            lastPlayerAction = x;
-                            System.out.println("\nPlayer " + (x + 1) + " has played " + playerList.get(x).getPlayerHand().get(playerSelection - 1)); }
-
-                        //Proceeding with the game, always starting with displaying the current card in play.
+                            System.out.println("\nPlayer " + (x + 1) + " has played " + playerList.get(x).getPlayerHand().get(playerSelection - 1));
+                            playerList.get(x).getPlayerHand().remove(playerSelection - 1);
+                        }
+                        //This is for subsequent turns where the player is able to play any cards from the hand.
                         else {
-                            if (currentTrump.equals("Cleavage") || currentTrump.equals("Crystal Abundance") || currentTrump.equals("Economic Value")) {
-                                System.out.println("\nCurrent card in play is: " + currentTrumpName + " . The chosen trump category is:" + currentTrump + " with a current value of: " + displayCurrentTrumpValue);
-                            } else {
-                                System.out.println("\nCurrent card in play is: " + currentTrumpName + " . The chosen trump category is:" + currentTrump + " with a current value of: " + currentTrumpValue);
-                            }
+                            if (playerTurnCount == playerCount - 1) {
+                                System.out.println("\nNo other player has managed to play a card! You are free to play any cards! \nPlay a card by selecting the number.");
+                                for (Player aPlayer : playerList) {
+                                    aPlayer.setPlayerTurnStatus(true);
+                                }
+                                playerTurnCount = 0;
 
-                        Scanner userInputGameMenu = new Scanner(System.in);
-                        System.out.println("\nPlay a card by selecting the number or press 0 to Pass and draw a card!");
-                        playerSelection = userInputGameMenu.nextInt();
-                        // Variable decidingTrumpValue is used to determine if the value of the Trump of the card is higher or lower than the one in play
-                        double decidingTrumpValue = 0;
-                        while (playerSelection > 0 && playerSelection <= playerList.get(x).getPlayerHand().size()) {
+                                Scanner passedTurns = new Scanner(System.in);
+                                playerSelection = passedTurns.nextInt();
+                                Scanner userInputPlayCat = new Scanner(System.in);
+                                System.out.println("You have selected: " + playerList.get(x).getPlayerHand().get(playerSelection - 1).getMineralName());
+                                System.out.println("Choose a playing category: [1] Hardness, [2] SG, [3] Cleavage, [4] CA, [5] EV");
+                                playCategory = userInputPlayCat.nextInt();
 
-                            decidingTrumpValue = calTrumpValue(currentTrump, playerList.get(x).getPlayerHand().get(playerSelection - 1));
-
-                            if (decidingTrumpValue <= currentTrumpValue) {
-                                System.out.println("The card you have played has a lower value in the selected category! Please select another card.");
-                                Scanner userNextInputGameMenu = new Scanner(System.in);
-                                playerSelection = userNextInputGameMenu.nextInt();
-                            } else {
+                                //Setting the following variables to reflect the properties of the card that the player has played.
                                 currentTrumpName = playerList.get(x).getPlayerHand().get(playerSelection - 1).getMineralName();
-                                currentTrumpValue = decidingTrumpValue;
-                                System.out.println("Player " + (x + 1) + " has played " + playerList.get(x).getPlayerHand().get(playerSelection - 1));
+                                currentTrump = changeTrump(playCategory);
+                                currentTrumpValue = changeTrumpValue(playCategory, playerList.get(x).getPlayerHand().get(playerSelection - 1));
+                                displayCurrentTrumpValue = changeTrumpStringValue(playCategory, playerList.get(x).getPlayerHand().get(playerSelection - 1));
+                                System.out.println("\nPlayer " + (x + 1) + " has played " + playerList.get(x).getPlayerHand().get(playerSelection - 1));
                                 playerList.get(x).getPlayerHand().remove(playerSelection - 1);
-                                lastPlayerAction = x;
-
-                                if (playerList.get(x).getPlayerHand().isEmpty()) {
+                                if (playerList.get(x).getPlayerHand().size() == 0) {
                                     System.out.println("Player " + (x + 1) + "has finished the game!");
                                     playerList.get(x).setPlayerGameStatus(false);
-                                    finishedPlayerList.add("Player" + x);
+                                    finishedPlayerList.add("Player" + (x + 1));
                                     finishedPlayers += 1;
+                                    currentTrumpName = null;
                                     if (finishedPlayers == playerCount - 1) {
                                         runGame = false;
                                     }
                                 }
-                            break;
                             }
-                        }
-                        if (playerSelection == 0) {
-                            if (totalCardCount != 0) {
-                                dealCard = randInt.nextInt(totalCardCount);
-                                playerList.get(x).drawCard(cardDeck.get(dealCard));
-                                cardDeck.remove(dealCard);
-                                totalCardCount -= 1;
-                                System.out.println("The amount of cards left in the deck is: " + totalCardCount);
-                            }
+                            //Proceeding with the game, always starting with displaying the current card in play.
                             else {
-                                System.out.println("There are no more cards left in the deck! Wait for your next turn.");
+                                if (currentTrump.equals("Cleavage") || currentTrump.equals("Crystal Abundance") || currentTrump.equals("Economic Value")) {
+                                    System.out.println("\nCurrent card in play is: " + currentTrumpName + " . The chosen trump category is:" + currentTrump + " with a current value of: " + displayCurrentTrumpValue);
+                                } else {
+                                    System.out.println("\nCurrent card in play is: " + currentTrumpName + " . The chosen trump category is:" + currentTrump + " with a current value of: " + currentTrumpValue);
+                                }
+
+                                Scanner userInputGameMenu = new Scanner(System.in);
+                                System.out.println("\nPlay a card by selecting the number or press 0 to Pass and draw a card!");
+                                playerSelection = userInputGameMenu.nextInt();
+                                // Variable decidingTrumpValue is used to determine if the value of the Trump of the card is higher or lower than the one in play
+                                double decidingTrumpValue = 0;
+                                if (playerSelection > 0 && playerSelection <= playerList.get(x).getPlayerHand().size()) {
+                                    decidingTrumpValue = calTrumpValue(currentTrump, playerList.get(x).getPlayerHand().get(playerSelection - 1));
+
+                                    while (decidingTrumpValue <= currentTrumpValue) {
+                                        System.out.println("The card you have played has a lower value in the selected category! Please select another card.");
+                                        Scanner userNextInputGameMenu = new Scanner(System.in);
+                                        playerSelection = userNextInputGameMenu.nextInt();
+                                        decidingTrumpValue = calTrumpValue(currentTrump, playerList.get(x).getPlayerHand().get(playerSelection - 1));
+                                    }
+
+                                    currentTrumpName = playerList.get(x).getPlayerHand().get(playerSelection - 1).getMineralName();
+                                    currentTrumpValue = decidingTrumpValue;
+                                    System.out.println("Player " + (x + 1) + " has played " + playerList.get(x).getPlayerHand().get(playerSelection - 1));
+                                    playerList.get(x).getPlayerHand().remove(playerSelection - 1);
+                                    if (playerList.get(x).getPlayerHand().isEmpty()) {
+                                        System.out.println("Player " + (x + 1) + " has finished the game! The game continues!");
+                                        playerList.get(x).setPlayerGameStatus(false);
+                                        finishedPlayerList.add("Player" + (x + 1));
+                                        finishedPlayers += 1;
+                                        currentTrumpName = null;
+                                        if (finishedPlayers == playerCount - 1) {
+                                            runGame = false;
+                                        }
+                                    }
+                                }
+                                if (playerSelection == 0) {
+                                    if (totalCardCount != 0) {
+                                        dealCard = randInt.nextInt(totalCardCount);
+                                        playerList.get(x).drawCard(cardDeck.get(dealCard));
+                                        cardDeck.remove(dealCard);
+                                        totalCardCount -= 1;
+                                        playerTurnCount += 1;
+                                        playerList.get(x).setPlayerTurnStatus(false);
+
+                                            System.out.println("Player " + (x + 1) + " has passed and drew a card! \nThe amount of cards left in the deck is: " + totalCardCount + "\nPlease wait for your next turn!");
+                                        } else {
+                                            playerTurnCount += 1;
+                                            playerList.get(x).setPlayerTurnStatus(false);
+                                            System.out.println("There are no more cards left in the deck! Please wait for your next turn.");
+                                        }
+                                    }
+                                }
                             }
-                        }
                         }
                     }
                 }
             }
-        }
 
-        System.out.println("The game has finished! \nThe overall winner is: " + finishedPlayerList.get(0) + "\nHere are the runner ups:");
-    }
+            System.out.println("The game has finished! \nThe overall winner is: " + finishedPlayerList.get(0) + "\nHere are the runner ups:");
+        }
 
     //Method to set the trump category based on user selection.
     public static String changeTrump(int playCategory){

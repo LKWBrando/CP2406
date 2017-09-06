@@ -12,7 +12,7 @@ public class Player {
         this.playerIndex = playerIndex;
         playerHand = new ArrayList<Card>();
         playerGameStatus = true;
-        playerTurnStatus = false;
+        playerTurnStatus = true;
     }
 
     public ArrayList<Card> getPlayerHand() {
@@ -32,6 +32,8 @@ public class Player {
     public void setPlayerGameStatus(Boolean playerGameStatus) {
         this.playerGameStatus = playerGameStatus;
     }
+
+    public void setPlayerTurnStatus(Boolean playerTurnStatus){this.playerTurnStatus = playerTurnStatus;}
 
     public String toString(){
         String output ="Player: " + playerIndex + " has the following cards:\n";
