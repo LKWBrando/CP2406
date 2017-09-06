@@ -9,20 +9,34 @@ public class Game {
     public static void main(String[] args) throws IOException {
         //Reading from the card.txt file
         ArrayList<Card> cardDeck = new ArrayList<Card>();
+        //Scanner inputFile = new Scanner(new File(".\\card.txt"));
         Scanner inputFile = new Scanner(new File("C:\\Users\\user\\IdeaProjects\\CP2406\\src\\AssignmentOne\\card.txt"));
-        //Creating a Card object based on each line in the txt file
+        //Creating a MineralCard object based on each line in the txt file
         while (inputFile.hasNextLine()) {
             String[] fileLine = inputFile.nextLine().split(",");
             try {
-                //Parsing string values in the txt file to double values as defined in the Card object
+                //Parsing string values in the txt file to double values as defined in the MineralCard object
                 double convMinHD = Double.parseDouble(fileLine[1]);
                 double convMinSG = Double.parseDouble(fileLine[2]);
-                Card newCard = new Card(fileLine[0], convMinHD, convMinSG, fileLine[3], fileLine[4], fileLine[5]);
+                MineralCard newCard = new MineralCard(fileLine[0], convMinHD, convMinSG, fileLine[3], fileLine[4], fileLine[5]);
                 cardDeck.add(newCard);
             } catch (NumberFormatException error) {
             }
         }
         inputFile.close();
+
+        SuperTrumpCard theGeologist = new SuperTrumpCard("The Geologist", "Change to trump category of your choice");
+        cardDeck.add(theGeologist);
+        SuperTrumpCard theGeophysicist = new SuperTrumpCard("The Geophysicist", "Change the trump category to Specific Gravity or throw magnetite");
+        cardDeck.add(theGeophysicist);
+        SuperTrumpCard theMineralogist = new SuperTrumpCard("The Mineralogist","Change the trump category to Cleavage");
+        cardDeck.add(theMineralogist);
+        SuperTrumpCard theGemmologist = new SuperTrumpCard("The Gemmologist", "Change the trump category to Hardness");
+        cardDeck.add(theGemmologist);
+        SuperTrumpCard thePetrologist = new SuperTrumpCard("The Petrologist", "Change the trump category to Crystal Abundance");
+        cardDeck.add(thePetrologist);
+        SuperTrumpCard theMiner = new SuperTrumpCard("The Miner", "Change the trump category to EV");
+        cardDeck.add(theMiner);
 
         //Asking for user input on the number of players
         int playerCount = 0;
@@ -89,10 +103,19 @@ public class Game {
                             System.out.println("You have selected: " + playerList.get(x).getPlayerHand().get(playerSelection - 1).getMineralName() + "\nChoose a playing category: [1] Hardness, [2] SG, [3] Cleavage, [4] CA, [5] EV");
                             playCategory = userInputPlayCat.nextInt();
 
+                            if (playerList.get(x).getPlayerHand().get(playerSelection-1) instanceof MineralCard){
                             currentTrumpName = playerList.get(x).getPlayerHand().get(playerSelection - 1).getMineralName();
                             currentTrump = changeTrump(playCategory);
-                            currentTrumpValue = changeTrumpValue(playCategory, playerList.get(x).getPlayerHand().get(playerSelection - 1));
-                            displayCurrentTrumpValue = changeTrumpStringValue(playCategory, playerList.get(x).getPlayerHand().get(playerSelection - 1));
+                            currentTrumpValue = changeTrumpValue(playCategory, (MineralCard)playerList.get(x).getPlayerHand().get(playerSelection - 1));
+                            displayCurrentTrumpValue = changeTrumpStringValue(playCategory, (MineralCard)playerList.get(x).getPlayerHand().get(playerSelection - 1));}
+                            else {
+                                currentTrumpName = playerList.get(x).getPlayerHand().get(playerSelection-1).getMineralName();
+                                x -= 1;
+                                System.out.println("Player " + (x+1) + "has played the Trump Card: " + currentTrumpName + "\nPlayer " + (x+1) + " gets another turn! All players also get their turns back!");
+                                for (Player aPlayer : playerList) {
+                                    aPlayer.setPlayerTurnStatus(true);
+                                }
+                            }
 
                             System.out.println("\nPlayer " + (x + 1) + " has played " + playerList.get(x).getPlayerHand().get(playerSelection - 1));
                             playerList.get(x).getPlayerHand().remove(playerSelection - 1);
@@ -116,8 +139,8 @@ public class Game {
                                 //Setting the following variables to reflect the properties of the card that the player has played.
                                 currentTrumpName = playerList.get(x).getPlayerHand().get(playerSelection - 1).getMineralName();
                                 currentTrump = changeTrump(playCategory);
-                                currentTrumpValue = changeTrumpValue(playCategory, playerList.get(x).getPlayerHand().get(playerSelection - 1));
-                                displayCurrentTrumpValue = changeTrumpStringValue(playCategory, playerList.get(x).getPlayerHand().get(playerSelection - 1));
+                                currentTrumpValue = changeTrumpValue(playCategory, (MineralCard)playerList.get(x).getPlayerHand().get(playerSelection - 1));
+                                displayCurrentTrumpValue = changeTrumpStringValue(playCategory, (MineralCard)playerList.get(x).getPlayerHand().get(playerSelection - 1));
                                 System.out.println("\nPlayer " + (x + 1) + " has played " + playerList.get(x).getPlayerHand().get(playerSelection - 1));
                                 playerList.get(x).getPlayerHand().remove(playerSelection - 1);
                                 if (playerList.get(x).getPlayerHand().size() == 0) {
@@ -145,13 +168,13 @@ public class Game {
                                 // Variable decidingTrumpValue is used to determine if the value of the Trump of the card is higher or lower than the one in play
                                 double decidingTrumpValue = 0;
                                 if (playerSelection > 0 && playerSelection <= playerList.get(x).getPlayerHand().size()) {
-                                    decidingTrumpValue = calTrumpValue(currentTrump, playerList.get(x).getPlayerHand().get(playerSelection - 1));
+                                    decidingTrumpValue = calTrumpValue(currentTrump, (MineralCard)playerList.get(x).getPlayerHand().get(playerSelection - 1));
 
                                     while (decidingTrumpValue <= currentTrumpValue) {
                                         System.out.println("The card you have played has a lower value in the selected category! Please select another card.");
                                         Scanner userNextInputGameMenu = new Scanner(System.in);
                                         playerSelection = userNextInputGameMenu.nextInt();
-                                        decidingTrumpValue = calTrumpValue(currentTrump, playerList.get(x).getPlayerHand().get(playerSelection - 1));
+                                        decidingTrumpValue = calTrumpValue(currentTrump, (MineralCard)playerList.get(x).getPlayerHand().get(playerSelection - 1));
                                     }
 
                                     currentTrumpName = playerList.get(x).getPlayerHand().get(playerSelection - 1).getMineralName();
@@ -169,7 +192,7 @@ public class Game {
                                         }
                                     }
                                 }
-                                if (playerSelection == 0) {
+                                else {
                                     if (totalCardCount != 0) {
                                         dealCard = randInt.nextInt(totalCardCount);
                                         playerList.get(x).drawCard(cardDeck.get(dealCard));
@@ -218,7 +241,7 @@ public class Game {
         return currentTrump;
     }
     //Method to change value of the trump category based on the card the user has played.
-    public static double changeTrumpValue(int playCategory, Card playedCard){
+    public static double changeTrumpValue(int playCategory, MineralCard playedCard){
         double currentTrumpValue = 0.0;
         switch (playCategory) {
             case 1:
@@ -239,7 +262,7 @@ public class Game {
         return currentTrumpValue;
     }
 
-    public static String changeTrumpStringValue(int playCategory, Card playedCard){
+    public static String changeTrumpStringValue(int playCategory, MineralCard playedCard){
         String displayCurrentTrumpValue = null;
         switch (playCategory) {
             case 1:
@@ -260,7 +283,7 @@ public class Game {
         return displayCurrentTrumpValue;
     }
 
-    public static double calTrumpValue(String currentTrump, Card playedCard){
+    public static double calTrumpValue(String currentTrump, MineralCard playedCard){
         double decidingTrumpValue = 0.0;
         switch (currentTrump) {
             case "Hardness":
@@ -272,12 +295,72 @@ public class Game {
             case "Cleavage":
                 decidingTrumpValue = playedCard.getMineralCleavageValue(playedCard.getMineralCleavage());
                 break;
-            case "Crystal Abuandance":
+            case "Crystal Abundance":
                 decidingTrumpValue = playedCard.getMineralCaValue(playedCard.getMineralCA());
                 break;
             case "Economic Value":
                 decidingTrumpValue = playedCard.getEvValue(playedCard.getMineralEcoValue());
         }
         return decidingTrumpValue;
+    }
+
+    public static String playTrumpCard(String currentTrumpName, int x,Player aPlayer, Card aCard){
+        String trumpCategory = null;
+        int playerSelection = 0;
+        int selectUserInput = 0;
+        switch(currentTrumpName) {
+            case "The Geologist":
+                for (int i = 0; i< aPlayer.getPlayerHand().size(); i++){
+                    if (aPlayer.getPlayerHand().get(x).getMineralName().equals("Magnetite")){
+                        System.out.println("You have the Magnetite card in your hand, do you want to play it?\nEnter 1 for yes, 2 for no");
+                        Scanner userInput = new Scanner(System.in);
+                        selectUserInput = userInput.nextInt();
+                        if (selectUserInput == 1){
+                            playerSelection = aPlayer.getPlayerHand().indexOf(aCard);
+                            aPlayer.getPlayerHand().remove(playerSelection - 1);
+                        }
+                        else{
+                            trumpCategory = "Specific Gravity";
+                        }
+                    }
+                }
+                break;
+            case "The Geophysicist":
+                System.out.println("Choose a playing category: [1] Hardness, [2] SG, [3] Cleavage, [4] CA, [5] EV");
+                Scanner userInput = new Scanner(System.in);
+                selectUserInput = userInput.nextInt();
+                switch (selectUserInput){
+                    case 1:
+                        trumpCategory = "Hardness";
+                        break;
+                    case 2:
+                        trumpCategory = "Specific Gravity";
+                        break;
+                    case 3:
+                        trumpCategory = "Cleavage";
+                        break;
+                    case 4:
+                        trumpCategory = "Crystal Abundance";
+                        break;
+                    case 5:
+                        trumpCategory = "Economic Value";
+                        break;
+                }
+                return  trumpCategory;
+
+            case "The Mineralogist":
+                trumpCategory = "Cleavage";
+                break;
+            case "The Gemmologist":
+                trumpCategory = "Hardness";
+                break;
+            case "The Petrologist":
+                trumpCategory = "Crystal Abundance";
+                break;
+            case "The Miner":
+                trumpCategory = "Economic Value";
+                break;
+        }
+        return trumpCategory;
     }
 }
