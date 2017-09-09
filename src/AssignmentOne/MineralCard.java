@@ -41,36 +41,50 @@ public class MineralCard extends Card{
         switch(s){
             case "none":
                 cardPlayValue = 0;
+                break;
             case "poor/none":
                 cardPlayValue = 1;
+                break;
             case "1 poor":
                 cardPlayValue = 2;
+                break;
             case "2 poor":
                 cardPlayValue = 3;
+                break;
             case "1 good":
                 cardPlayValue = 4;
+                break;
             case "1 good/1 poor":
                 cardPlayValue = 5;
+                break;
             case "2 good":
                 cardPlayValue = 6;
+                break;
             case "3 good":
                 cardPlayValue = 7;
+                break;
             case "1 perfect":
                 cardPlayValue = 8;
+                break;
             case "1 perfect/1 good":
                 cardPlayValue = 9;
+                break;
             case "1 perfect/2 good":
                 cardPlayValue = 10;
+                break;
             case "2 perfect/1 good":
                 cardPlayValue = 11;
+                break;
             case "3 perfect":
                 cardPlayValue = 12;
+                break;
             case "4 perfect":
                 cardPlayValue = 13;
+                break;
             case "6 perfect":
                 cardPlayValue = 14;
-            break;
-        }
+                break;
+            }
         return cardPlayValue;
     }
 
@@ -78,18 +92,23 @@ public class MineralCard extends Card{
         switch(s){
             case "ultratrace":
                 cardPlayValue = 0;
+                break;
             case "trace":
                 cardPlayValue = 1;
+                break;
             case "low":
                 cardPlayValue = 2;
+                break;
             case "moderate":
                 cardPlayValue = 3;
+                break;
             case "high":
                 cardPlayValue = 4;
+                break;
             case "very high":
                 cardPlayValue = 5;
-            break;
-        }
+                break;
+            }
         return cardPlayValue;
     }
 
@@ -97,23 +116,27 @@ public class MineralCard extends Card{
         switch(s){
             case "trivial":
                 cardPlayValue = 0;
+                break;
             case "low":
                 cardPlayValue = 1;
+                break;
             case "moderate":
                 cardPlayValue = 2;
+                break;
             case "high":
                 cardPlayValue = 3;
+                break;
             case "very high":
                 cardPlayValue = 4;
+                break;
             case "I'm rich!":
                 cardPlayValue = 5;
-            break;
-        }
+                break;
+            }
         return cardPlayValue;
     }
 
     public String toString(){
-        return super.toString() + ", Hardness: " + mineralHD + ", SG: " + mineralSG + ", Cleavage: " +
-                mineralCleavage + ", CA: " + mineralCA + ", EV: " + mineralEcoValue;
+        return super.toString() + String.format("Hardness: %-7.2f |" + "Specific Gravity: %-7.2f |" + "Cleavage: %-20s |"+ "Crystal Abundance: %-13s |"+ "Economic Value: %-10s",mineralHD, mineralSG, mineralCleavage, mineralCA, mineralEcoValue);
     }
 }
