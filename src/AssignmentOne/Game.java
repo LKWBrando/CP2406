@@ -82,8 +82,8 @@ public class Game {
         int playerSelection; //Variable based on player input for card selection from their hand
         ArrayList<String> finishedPlayerList = new ArrayList<String>(); //Arraylist to store finished players according to their ranking.
         int finishedPlayers = 0; //Variable used to count the number of finished players.
-        int playCategory; // Variable used to store user selection on which Trump category is to be played.
-        int playerTurnCount = 0;
+        int playCategory = 0; // Variable used to store user selection on which Trump category is to be played.
+        int playerPassCount = 0;
 
         String currentTrump = null; //Variable based on current Trump category in play.
         String currentTrumpName = null; //Variable based on name of the current card in play.
@@ -109,8 +109,16 @@ public class Game {
 
                         //IF/ELSE statement is to allow the first player to start the game by playing the first card, or subsequent players after a player has won their hand, using variable currentTrumpName as a check.
                         //IF the player is the first player of a new game, or the first player after a player has won their hand...
-                        if (currentTrumpName == null) {
-                            System.out.println("\nYou get to play the first card!\nPlay a card by selecting the number");
+                        if (currentTrumpName == null || (playerPassCount == (playerCount - 1))) {
+                            if(currentTrumpName == null){
+                            System.out.println("\nYou get to play the first card!\nPlay a card by selecting the number");}
+                            else{
+                                System.out.println("All other players have passed. You can play any card now!");
+                                for (Player aPlayer : playerList) {
+                                    aPlayer.setPlayerTurnStatus(true);
+                                }
+                                playerPassCount = 0;
+                            }
                             while (true) {
                                 try {
                                     Scanner firstPlayCard = new Scanner(System.in);
@@ -142,7 +150,6 @@ public class Game {
                                     } catch(InputMismatchException error){
                                         System.out.println("You have entered a wrong data type! Please enter a number from 1 to 5\nChoose a playing category:\n[1] : Hardness\n[2] : SG\n[3] : Cleavage\n[4] : CA\n[5] : EV");
                                     }
-
                                 }
 
                                 //Storing variables according to the properties of the Card. Explicit casting is used to allow methods for objects of MineralCard class to be called.
@@ -185,7 +192,7 @@ public class Game {
                             //IF/ELSE statement is used here to determine if the current Trump Category uses a String value or double value, and prints the properties of the current card in play.
                             //IF Current Trump Category uses a String value...
                             if (currentTrump.equals("Cleavage") || currentTrump.equals("Crystal Abundance") || currentTrump.equals("Economic Value")) {
-                                System.out.println("\nCurrent card in play is: " + currentTrumpName + " . The chosen trump category is:" + currentTrump + " with a current value of: " + displayCurrentTrumpValue);
+                                System.out.println("\nCurrent card in play is: " + currentTrumpName + ". The chosen trump category is: " + currentTrump + " with a current value of: " + displayCurrentTrumpValue);
                             }
                             //Else Current Trump Category uses a double value...
                             else {
@@ -205,7 +212,7 @@ public class Game {
                                     }
                                     break;
                                 } catch (InputMismatchException error) {
-                                    System.out.println("You have entered a wrong data type! Please enter a card number from your hand or enter 0 to draw a card and pass your turn!");
+                                    System.out.println("You have entered a wrong data type!");
                                 }
                             }
 
@@ -229,16 +236,20 @@ public class Game {
                                             System.out.println("The card you have played has a lower value than the card in play! Please select another card.");
                                             Scanner nextPlayCard = new Scanner(System.in);
                                             playerSelection = nextPlayCard.nextInt();
+                                            while (playerSelection > playerList.get(x).getPlayerHand().size() || playerSelection == 0){
+                                                System.out.println("You have entered an invalid card number, please enter a card number from 1 to " + playerList.get(x).getPlayerHand().size());
+                                                playerSelection = nextPlayCard.nextInt();
+                                            }
                                             decidingTrumpValue = calTrumpValue(currentTrump, (MineralCard)playerList.get(x).getPlayerHand().get(playerSelection - 1));
                                         } catch (InputMismatchException error){
                                             System.out.println("You have entered a wrong data type! Please enter a card number from your hand!");
                                         }
                                     }
 
-
                                     //Updating variables for Trump Name and Value
                                     currentTrumpName = playerList.get(x).getPlayerHand().get(playerSelection - 1).getMineralName();
                                     currentTrumpValue = decidingTrumpValue;
+                                    displayCurrentTrumpValue = changeTrumpStringValue(playCategory, (MineralCard)playerList.get(x).getPlayerHand().get(playerSelection - 1));
 
                                     //Displaying the card that the player has played for the turn and removing it from the player hand.
                                     System.out.println("\nPlayer " + (x + 1) + " has played " + playerList.get(x).getPlayerHand().get(playerSelection - 1));
@@ -295,17 +306,17 @@ public class Game {
                                     playerList.get(x).drawCard(cardDeck.get(dealCard));
                                     cardDeck.remove(dealCard);
                                     totalCardCount -= 1;
-                                    playerTurnCount += 1;
 
                                     //Player turn status is changed to false as they forfeit their turn by drawing a card, as per game mechanics.
                                     playerList.get(x).setPlayerTurnStatus(false);
+                                    playerPassCount += 1;
                                     System.out.println("\nPlayer " + (x + 1) + " has passed and drew a card! \nThe amount of cards left in the deck is: " + totalCardCount + "\nPlease wait for your next turn!");
                                 }
 
                                 //ELSE there are no more cards left in the deck...
                                 else {
-                                    playerTurnCount += 1;
                                     playerList.get(x).setPlayerTurnStatus(false);
+                                    playerPassCount += 1;
                                     System.out.println("\nThere are no more cards left in the deck! Please wait for your next turn.");
                                 }
                             }

@@ -19,6 +19,6 @@ public class Card {
     }
 
     public String toString(){
-         return String.format("Name: %-15s |",mineralName);
+         return String.format("Name: %-18s |",mineralName);
     }
 }
