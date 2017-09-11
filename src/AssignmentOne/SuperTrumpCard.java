@@ -2,11 +2,12 @@
 The SuperTrumpCard class is the child class of the Card class.
 Additional variables involved are:
 1. cardDescription, used to store the string values of the SuperTrumpCard object
-2.
+2. cardTrumpCategory
  */
 
 package AssignmentOne;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SuperTrumpCard extends Card {
@@ -18,25 +19,29 @@ public class SuperTrumpCard extends Card {
         this.cardDescription = cardDescription;
     }
 
-    public String getSuperTrumpCardCat(String currentTrumpName, int x,Player aPlayer, Card aCard){
-        String cardTrumpCategory = null;
+    public String getCardTrumpCategory() {
+        return cardTrumpCategory;
+    }
+
+    public String getSuperTrumpCardCat(String currentTrumpName, int currentPlayerIndex, Player aPlayer, Card aCard){
+        String trumpCardCategory = null;
         int playerSelection;
         int selectUserInput;
         switch(currentTrumpName) {
             case "The Geophysicist":
                 for (int i = 0; i< aPlayer.getPlayerHand().size(); i++){
-                    if (aPlayer.getPlayerHand().get(x).getMineralName().equals("Magnetite")){
+                    if (aPlayer.getPlayerHand().get(currentPlayerIndex).getMineralName().equals("Magnetite")){
                         System.out.println("You have the Magnetite card in your hand, do you want to play it?\nEnter [1] for yes, [2] no");
                         Scanner userInput = new Scanner(System.in);
                         selectUserInput = userInput.nextInt();
                         if (selectUserInput == 1){
                             playerSelection = aPlayer.getPlayerHand().indexOf(aCard);
                             aPlayer.getPlayerHand().remove(playerSelection - 1);
-                            cardTrumpCategory = "None!";
+                            trumpCardCategory = "None";
                         }
                         else{
                             System.out.println("You have chosen not to play the Magnetite card!");
-                            cardTrumpCategory = "Specific Gravity";
+                            trumpCardCategory = "Specific Gravity";
                         }
                     }
                     else{
@@ -45,46 +50,60 @@ public class SuperTrumpCard extends Card {
                 }
                 break;
             case "The Geologist":
-                System.out.println("You have played The Geologist! You get to change the current Trump Category!\nChoose a Trump category to play!\n[1] : Hardness\n[2] : Specific Gravity\n[3] : Cleavage\n[4] : Crystal Abundance\n[5] : Economic Value\nThe play value has been reset!");
-                Scanner userInput = new Scanner(System.in);
-                selectUserInput = userInput.nextInt();
+                System.out.println("You have played The Geologist! You get to change the current Trump Category!");
+                while (true){
+                    try{
+                        System.out.println("\nChoose a Trump category to play!\n[1] : Hardness\n[2] : Specific Gravity\n[3] : Cleavage\n[4] : Crystal Abundance\n[5] : Economic Value\nThe play value has been reset!");
+                        Scanner userInput = new Scanner(System.in);
+                        selectUserInput = userInput.nextInt();
+                        while (selectUserInput < 1 || selectUserInput > 5){
+                            System.out.println("");
+                            selectUserInput = userInput.nextInt();
+                        }
+                        break;
+                    }
+                    catch (InputMismatchException error){
+                        System.out.println("You have entered the wrong data type!");
+                    }
+                }
+
                 switch (selectUserInput){
                     case 1:
-                        cardTrumpCategory = "Hardness";
+                        trumpCardCategory = "Hardness";
                         break;
                     case 2:
-                        cardTrumpCategory = "Specific Gravity";
+                        trumpCardCategory = "Specific Gravity";
                         break;
                     case 3:
-                        cardTrumpCategory = "Cleavage";
+                        trumpCardCategory = "Cleavage";
                         break;
                     case 4:
-                        cardTrumpCategory = "Crystal Abundance";
+                        trumpCardCategory = "Crystal Abundance";
                         break;
                     case 5:
-                        cardTrumpCategory = "Economic Value";
+                        trumpCardCategory = "Economic Value";
                         break;
                 }
-                return cardTrumpCategory;
+                return trumpCardCategory;
 
             case "The Mineralogist":
                 System.out.println("You have played The Mineralogist! You have changed the current Trump Category to Cleavage. The play value has been reset!");
-                cardTrumpCategory = "Cleavage";
+                trumpCardCategory = "Cleavage";
                 break;
             case "The Gemmologist":
                 System.out.println("You have played the Gemmologist! You have changed the current Trump Category to Hardness. The play value has been reset!");
-                cardTrumpCategory = "Hardness";
+                trumpCardCategory = "Hardness";
                 break;
             case "The Petrologist":
                 System.out.println("You have played the Petrologist! You have changed the current Trump Category to Crystal Abundance. The play value has been reset!");
-                cardTrumpCategory = "Crystal Abundance";
+                trumpCardCategory = "Crystal Abundance";
                 break;
             case "The Miner":
                 System.out.println("You have played the Miner! You have changed the current Trump Category to Economic Value. The play value has been reset!");
-                cardTrumpCategory = "Economic Value";
+                trumpCardCategory = "Economic Value";
                 break;
         }
-        return cardTrumpCategory;
+        return trumpCardCategory;
     }
 
     public String toString(){
