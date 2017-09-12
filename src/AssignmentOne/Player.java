@@ -4,17 +4,14 @@ import java.util.ArrayList;
 //The Player Class is used to create objects with the attributes of the players involved in the game.
 public class Player {
 
-    //Variables involved are:
-    //1. playerIndex, used to name and identify the player object according to an integer value.
+    /*Variables involved are:
+    1. playerIndex, used to name and identify the player object according to an integer value.
+    2. playerHand, an arraylist used to store Card objects as dealt to the player object in the game.
+    3. playerGameStatus, a Boolean variable used to determine if the player object has finished the game or not, with the default value of TRUE that indicates the player is still playing the game.
+    4. playerTurnStatus, a Boolean variable used to determine if the player object has passed his/her turn or not, with the default value of TRUE that indicates the player still has his/her turn.*/
     private int playerIndex;
-
-    //2. playerHand, an arraylist used to store Card objects as dealt to the player object in the game.
     private ArrayList <Card>playerHand;
-
-    //3. playerGameStatus, a Boolean variable used to determine if the player object has finished the game or not, with the default value of TRUE that indicates the player is still playing the game.
     private Boolean playerGameStatus;
-
-    //4. playerTurnStatus, a Boolean variable used to determine if the player object has passed his/her turn or not, with the default value of TRUE that indicates the player still has his/her turn.
     private Boolean playerTurnStatus;
 
     //Constructor for the Player Class;

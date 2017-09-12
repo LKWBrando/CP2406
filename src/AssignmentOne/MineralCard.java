@@ -1,13 +1,23 @@
 package AssignmentOne;
 
+//The MineralCard Class is the sub class of the Card Class, used to create objects that have the base variable of mineralName
 public class MineralCard extends Card{
+    /*Additional variables involved are:
+    1. mineralHD, used to store the double values of the MineralCard object's hardness, as read from the txt file.
+    2. mineralSG, used to store the double values of the MineralCard object's Specific Gravity, as read from the txt file.
+    3. mineralCleavage, used to store the String values of the MineralCard object's Cleavage, as read from the txt file.
+    4. mineralCA, used to store the String values of the MineralCard object's Crystal Abundance as read from the txt file.
+    5. mineralEcoValue, used to store the String values of the MineralCard object's Economic Value, as read from the txt file.
+    6. cardPlayValue, used to store the value of a card with String values, that is converted to a int used to compare the ranking of the String values.
+    */
     private double mineralHD;
     private double mineralSG;
     private String mineralCleavage;
     private String mineralCA;
     private String mineralEcoValue;
-    public int cardPlayValue = 0;
+    private int cardPlayValue = 0;
 
+    //Constructor for the MineralCard Class
     public MineralCard(String mineralName, double mineralHD, double mineralSG, String mineralCleavage, String mineralCA, String mineralEcoValue){
         super(mineralName);
         this.mineralHD = mineralHD;
@@ -17,26 +27,32 @@ public class MineralCard extends Card{
         this.mineralEcoValue = mineralEcoValue;
     }
 
+    //Getter for the double variable mineralHD
     public double getMineralHD() {
         return mineralHD;
     }
 
+    //Getter for the double variable mineralSG
     public double getMineralSG() {
         return mineralSG;
     }
 
+    //Getter for the String variable mineralCleavage
     public String getMineralCleavage() {
         return mineralCleavage;
     }
 
+    //Getter for the String variable mineralCA
     public String getMineralCA() {
         return mineralCA;
     }
 
+    //Getter for the String variable mineralEcoValue
     public String getMineralEcoValue() {
         return mineralEcoValue;
     }
 
+    //Method to convert the String mineralCleavage values to integer values, as per their ranking with each other.
     public int getMineralCleavageValue(String s){
         switch(s){
             case "none":
@@ -88,6 +104,7 @@ public class MineralCard extends Card{
         return cardPlayValue;
     }
 
+    //Method to convert the String mineralCA values to integer values, as per their ranking with each other.
     public int getMineralCaValue(String s){
         switch(s){
             case "ultratrace":
@@ -112,7 +129,8 @@ public class MineralCard extends Card{
         return cardPlayValue;
     }
 
-    public int getEvValue(String s){
+    ////Method to convert the String mineralEcoValue values to integer values, as per their ranking with each other.
+    public int getMineralEvValue(String s){
         switch(s){
             case "trivial":
                 cardPlayValue = 1;
@@ -136,6 +154,7 @@ public class MineralCard extends Card{
         return cardPlayValue;
     }
 
+    //Overwritten toString() to display all the properties of the Card object
     public String toString(){
         return super.toString() + String.format("Hardness: %-7.2f |" + "Specific Gravity: %-7.2f |" + "Cleavage: %-18s |"+ "Crystal Abundance: %-13s |"+ "Economic Value: %-10s",mineralHD, mineralSG, mineralCleavage, mineralCA, mineralEcoValue);
     }

@@ -3,14 +3,13 @@ package AssignmentOne;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-//The SuperTrumpCard class is the sub class of the Card class, used to create objects that have the base variabe of mineralName
+//The SuperTrumpCard class is the sub class of the Card class, used to create objects that have the base variable of mineralName
 public class SuperTrumpCard extends Card {
-
     //Additional variables involved are:
     //1. cardDescription, used to store the string values of the SuperTrumpCard object
     private String cardDescription;
     //2. cardTrumpCategory, used to store the string values of the trump category based off the selected super trump card
-    private String cardTrumpCategory;
+    //private String trumpCardCategory;
 
     //Constructor for the SuperTrumpCard Class
     public SuperTrumpCard(String mineralName, String cardDescription){
@@ -32,9 +31,23 @@ public class SuperTrumpCard extends Card {
                 for (int i = 0; i< aPlayer.getPlayerHand().size(); i++){
                     //If the player hand does contain the Card Magnetite...
                     if (aPlayer.getPlayerHand().get(i).getMineralName().equals("Magnetite")){
-                        System.out.println("You have the Magnetite card in your hand, do you want to play it?\nEnter [1] for yes, [2] no");
-                        Scanner userInput = new Scanner(System.in);
-                        selectUserInput = userInput.nextInt();
+
+                        while(true){
+                            try{
+                                System.out.println("You have the Magnetite card in your hand, do you want to play it?\nEnter [1] for yes, [2] no");
+                                Scanner userInput = new Scanner(System.in);
+                                selectUserInput = userInput.nextInt();
+                                while (selectUserInput <1 || selectUserInput >2){
+                                    System.out.println("Please enter [1] for yes, and [2] for no!");
+                                    selectUserInput = userInput.nextInt();
+                                }
+                                break;
+                            }
+                            catch (InputMismatchException error){
+                                System.out.println("You have entered the wrong data type!");
+                            }
+                        }
+
                         //IF the player chooses to play the trump card with the Magnetite card
                         if (selectUserInput == 1){
                             trumpCardCategory = "None";
