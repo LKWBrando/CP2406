@@ -11,9 +11,11 @@ public class Game {
     //The start of the main method
     public static void main(String[] args) throws IOException {
 
-        //Reading from the card.txt file
+        //Creating an Arraylist to hold Card objects
         ArrayList<Card> cardDeck = new ArrayList<Card>();
-        FileReader readFile = new FileReader("C:\\Users\\user\\IdeaProjects\\CP2406\\src\\AssignmentOne\\card.txt");
+        //System.out.println(System.getProperty("user.dir"));
+        //Reading from the card.txt file, taking each line in the txt file, splitting it, and appending seperated values as variables of a new Card object
+        FileReader readFile = new FileReader(".\\card.txt");
         BufferedReader newFileLine = new BufferedReader(readFile);
         String nextLine;
         while ((nextLine = newFileLine.readLine()) != null){
@@ -50,13 +52,14 @@ public class Game {
                 Scanner gameStart = new Scanner(System.in);
                 System.out.println("\nPlease enter the number of players.\nA minimum of 3 players is required, up to a maximum of 5 players.");
                 playerCount = gameStart.nextInt();
+                //Variable player count has to be 3-5, as per the game rules
                 while (playerCount < 3 || playerCount > 5) {
                     System.out.println("You have entered an invalid number of players, please enter a number from 3 to 5!");
                     playerCount = gameStart.nextInt();
                 }
                 break;
             } catch (InputMismatchException error) {
-                System.out.println("You have entered a wrong data type! Please enter an integer number (3,4,5.. etc)");
+                System.out.println("You have entered a wrong data type! Please enter an integer number (3,4,5)");
             }
         }
 
@@ -81,15 +84,16 @@ public class Game {
             }
         }
 
+        //Starting the game...
         System.out.println("\nThe cards have been dealt!\nThere are " +playerCount+" players.\nThe amount of cards left in the deck is: " + totalCardCount + "\nThe game is starting! ");
-        System.out.println("\n*******************************************************************************************");
+        System.out.println("\n*******************************************************************************************\n");
 
         int playerSelection = 0; //Variable based on player input for card selection from their hand
         ArrayList<String> finishedPlayerList = new ArrayList<String>(); //Arraylist to store finished players according to their ranking.
         int finishedPlayers = 0; //Variable used to count the number of finished players.
-        int currentPlayer;
-        int currentPlayerIndex;
-
+        int roundCount = 0; //Variable used to count the number of rounds
+        int currentPlayer;//Variable used to indicate the current player.
+        int currentPlayerIndex;//Variable used to indicate the arraylist index of the current player.
         int playerPassCount = 0; //Variable used to count the number of players that has passed their turn.
         String currentTrump = null; //Variable based on current Trump category in play.
         String currentTrumpName = null; //Variable based on name of the current card in play.
@@ -98,7 +102,8 @@ public class Game {
         Boolean runGame = true; //Boolean Variable used to create an endless loop
 
         while (runGame) {
-            //int x is used to keep count of the current player.
+
+            //Assigning the number and index of the current player
             for (int x = 0; x < playerCount; x++) {
                 currentPlayer = x + 1;
                 currentPlayerIndex = x;
@@ -108,28 +113,30 @@ public class Game {
 
                     //IF/ELSE statement used to determine if the player has passed, and not allow them to play until all but one player has passed.
                     if (!playerList.get(currentPlayerIndex).getPlayerTurnStatus()) {
-                        System.out.println("You are unable to get a turn! Please wait until all but one player has passed.");
+                        System.out.println("You are unable to get a turn! Please wait until all but one player has passed for round " + roundCount);
                     }
                     else {
                         //Displays player hand at the start of their turn
                         System.out.println(playerList.get(currentPlayerIndex));
 
-                        //IF/ELSE statement is to allow the player to start a new round of the card play,using variable currentTrumpName as a check.
+                        //IF/ELSE statement is to allow the player to start a new round of the card play.
                         //IF the player is the first player of a new round...
                         if (currentTrumpName == null || (playerPassCount == (playerCount - 1))) {
+                            roundCount += 1;
+                            for (Player aPlayer : playerList) {
+                                aPlayer.setPlayerTurnStatus(true);
+                            }
+                            playerPassCount = 0;
+                            System.out.println("\nA new round has started! The current round is: " + roundCount);
 
                             //IF/ELSE statement is to print corresponding messages according to why the player gets to play the first card of the new round...
-                            //IF the player is the one who plays the first card of the whole game or after another player has won...
+                            //IF the player is the one who plays the first card at the start of the game, or after another player has won...
                             if(currentTrumpName == null){
                             System.out.println("\nYou get to play the first card!\nPlay a card by selecting the number");}
 
                             //ELSE every other player has passed, resetting variables for a new round...
                             else{
                                 System.out.println("All other players have passed. You can play any card now!");
-                                for (Player aPlayer : playerList) {
-                                    aPlayer.setPlayerTurnStatus(true);
-                                }
-                                playerPassCount = 0;
                             }
 
                             //Asking for user input on which card to play, with error checking...
@@ -137,7 +144,8 @@ public class Game {
                                 try {
                                     Scanner firstPlayCard = new Scanner(System.in);
                                     playerSelection = firstPlayCard.nextInt();
-                                    while (playerSelection == 0 || playerSelection > playerList.get(currentPlayerIndex).getPlayerHand().size()) {
+                                    //player has to select a card from the hand, and is not allowed to pass by entering 0
+                                    while (playerSelection <= 0 || playerSelection > playerList.get(currentPlayerIndex).getPlayerHand().size()) {
                                         System.out.println("You have entered an invalid card number, please enter a card number from 1 to " + playerList.get(currentPlayerIndex).getPlayerHand().size());
                                         playerSelection = firstPlayCard.nextInt();
                                     }
@@ -153,12 +161,13 @@ public class Game {
                                 int playCategory; // Variable used to store user selection on which Trump category is to be played.
                                 while (true) {
                                     System.out.println("You have selected: " + playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection - 1));
+                                    //As the player of the first card of the round, he/she is allowed to choose any of the categories in play
                                     try{
                                         Scanner mineralInput = new Scanner(System.in);
                                         System.out.println("\nChoose a playing category:\n[1] : Hardness\n[2] : Specific Gravity\n[3] : Cleavage\n[4] : Crystal Abundance\n[5] : Economic Value");
                                         playCategory = mineralInput.nextInt();
                                         while(playCategory < 1 || playCategory > 5){
-                                            System.out.println("You have entered an invalid number, Please enter a number from 1 to 5\nChoose a playing category:\n[1] : Hardness\n[2] : Specific Gravity\n[3] : Cleavage\n[4] : Crystal Abundance\n[5] : Economic Value");
+                                            System.out.println("You have entered an invalid number, Please enter a number from 1 to 5");
                                             Scanner mineralInputError = new Scanner(System.in);
                                             playCategory = mineralInputError.nextInt();
                                         }
@@ -168,13 +177,13 @@ public class Game {
                                     }
                                 }
 
-                                //Storing variables according to the properties of the Card. Explicit casting is used to allow methods for objects of MineralCard class to be called.
+                                //Setting variables according to the properties of the Card. Explicit casting is used to allow methods for objects of MineralCard class to be called.
                                 currentTrumpName = playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection - 1).getMineralName();
                                 currentTrump = changeTrump(playCategory);
                                 currentDoubleValue = changeTrumpValue(playCategory, (MineralCard)playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection - 1));
                                 currentStringValue = changeTrumpStringValue(playCategory, (MineralCard)playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection - 1));
 
-                                //Displaying the card that the player has played for the turn and removing it from the player hand.
+                                //Displaying the card that the player has played for the turn, then removing it from the player hand.
                                 System.out.println("\nPlayer " + currentPlayer + " has played " + playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection - 1));
                                 playerList.get(currentPlayerIndex).getPlayerHand().remove(playerSelection - 1);
                                 }
@@ -182,26 +191,29 @@ public class Game {
                             //ELSE Trump card is played...
                             else {
                                 currentTrumpName = playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection-1).getMineralName();
-
                                 //Resetting all player turns, according to the game mechanics of playing a Trump card.
                                 for (Player aPlayer : playerList) {
                                     aPlayer.setPlayerTurnStatus(true);
                                 }
 
                                 //Changing the Trump category in play according to the SuperTrump card properties.
-                                currentTrump = ((SuperTrumpCard)playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection-1)).getSuperTrumpCardCat(currentTrumpName,currentPlayerIndex,playerList.get(currentPlayerIndex),playerList.get(currentPlayerIndex).getPlayerHand().get(currentPlayerIndex));
+                                currentTrump = ((SuperTrumpCard)playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection-1)).getSuperTrumpCardCat(currentTrumpName,playerList.get(currentPlayerIndex));
+                                //getSuperTrumpCardCat(currentTrumpName,currentPlayerIndex,playerList.get(currentPlayerIndex),playerList.get(currentPlayerIndex).getPlayerHand().get(currentPlayerIndex))
                                 currentDoubleValue = 0;
                                 currentStringValue = "Nothing!";
 
+                                //The super trump card "The Geophysicist" will return a value of String "None" to the variable currentTrump if the user plays it with the Magnetite card.
                                 if (currentTrump.equals("None")) {
                                     playerList.get(currentPlayerIndex).setPlayerGameStatus(false);
                                     System.out.println("Player " + currentPlayer + " has finished the game by playing the SuperTrump card 'The Geophysicist' with the Magnetite card!");
                                     finishedPlayerList.add("Player" + currentPlayer);
                                     finishedPlayers += 1;
                                     currentTrumpName = null;
+                                    playerPassCount = 0;
+                                    playerCount -= 1;
 
                                     //IF statement used to determine how many players are left. One player remaining ends the game loop.
-                                    if (finishedPlayers == playerCount - 1) {
+                                    if (finishedPlayers > playerCount) {
                                         runGame = false;
                                     }
                                 }
@@ -213,6 +225,8 @@ public class Game {
                                 //Allowing the player to get another turn, as per game mechanics of playing a Trump card.
                                     x -= 1;
                                 }
+                            System.out.println("\nPlayer " + currentPlayer + " has played a super trump card, starting a new round!");
+                            roundCount += 1;
                             }
                             //IF statement used to determine if there are any cards left in the player's hand. If not, he/she wins the game.
                             if (playerList.get(currentPlayerIndex).getPlayerHand().isEmpty()) {
@@ -225,8 +239,9 @@ public class Game {
                                     aPlayer.setPlayerTurnStatus(true);
                                 }
                                 playerPassCount = 0;
+                                playerCount -= 1;
                                 //IF statement used to determine how many players are left. One player remaining ends the game loop.
-                                if (finishedPlayers == playerCount - 1) {
+                                if (finishedPlayers > playerCount) {
                                     runGame = false;
                                 }
                             }
@@ -234,6 +249,8 @@ public class Game {
 
                         //Else there is a card already in play...
                         else {
+                            System.out.println("\nThe current round is: " + roundCount);
+
                             //IF/ELSE statement is used here to determine if the current Trump Category uses a String value or double value, and prints the properties of the current card in play.
                             //IF Current Trump Category uses a String value...
                             if (currentTrump.equals("Cleavage") || currentTrump.equals("Crystal Abundance") || currentTrump.equals("Economic Value")) {
@@ -245,13 +262,12 @@ public class Game {
                             }
 
                             //Start by asking the player to play a card from their hand...
-
                             while (true) {
                                 try {
                                     System.out.println("\nPlay a card by selecting the number or press 0 to Pass and draw a card!");
                                     Scanner nextPlayCard = new Scanner(System.in);
                                     playerSelection = nextPlayCard.nextInt();
-                                    while (playerSelection > playerList.get(currentPlayerIndex).getPlayerHand().size()) {
+                                    while (playerSelection > playerList.get(currentPlayerIndex).getPlayerHand().size() || playerSelection < 0) {
                                         System.out.println("You have entered an invalid card number, please enter a card number from 1 to " + playerList.get(currentPlayerIndex).getPlayerHand().size() + " or enter 0 to pass.");
                                         Scanner nextPlayCardError = new Scanner(System.in);
                                         playerSelection = nextPlayCardError.nextInt();
@@ -279,12 +295,12 @@ public class Game {
 
                                     //WHILE statement is used to ensure that player plays a card that has a higher value than the one in play.
                                     while (decidingTrumpValue <= currentDoubleValue) {
+                                        System.out.println("The card you have played has a lower value than the card in play! Please select another card.");
                                         try{
-                                            System.out.println("The card you have played has a lower value than the card in play! Please select another card.");
                                             Scanner nextPlayCard = new Scanner(System.in);
                                             playerSelection = nextPlayCard.nextInt();
-                                            while (playerSelection > playerList.get(currentPlayerIndex).getPlayerHand().size()){
-                                                System.out.println("You have entered an invalid card number, please enter a card number from 1 to " + playerList.get(currentPlayerIndex).getPlayerHand().size());
+                                            while (playerSelection > playerList.get(currentPlayerIndex).getPlayerHand().size() || playerSelection <0){
+                                                System.out.println("You have entered an invalid card number, please enter a card number from 1 to " + playerList.get(currentPlayerIndex).getPlayerHand().size() + " or enter 0 to pass and draw a card.");
                                                 playerSelection = nextPlayCard.nextInt();
                                             }
                                             if(playerSelection == 0){
@@ -300,7 +316,6 @@ public class Game {
                                             System.out.println("You have entered a wrong data type! Please enter a card number from your hand!");
                                         }
                                     }
-
                                     if(playerSelection == 0) {
                                         //IF/ELSE statement used to determine if there are any cards left in the deck.
                                         //IF there are cards left in the deck...
@@ -309,30 +324,24 @@ public class Game {
                                             playerList.get(currentPlayerIndex).drawCard(cardDeck.get(dealCard));
                                             cardDeck.remove(dealCard);
                                             totalCardCount -= 1;
-
-                                            //Player turn status is changed to false as they forfeit their turn by drawing a card, as per game mechanics.
-                                            playerList.get(currentPlayerIndex).setPlayerTurnStatus(false);
-                                            playerPassCount += 1;
                                             System.out.println("\nPlayer " + currentPlayer + " has passed and drew a card! \nThe amount of cards left in the deck is: " + totalCardCount + "\nPlease wait for your next turn!");
                                         }
-
                                         //ELSE there are no more cards left in the deck...
                                         else {
-                                            playerList.get(currentPlayerIndex).setPlayerTurnStatus(false);
-                                            playerPassCount += 1;
                                             System.out.println("\nThere are no more cards left in the deck! Please wait for your next turn.");
                                         }
+                                        //Player turn status is changed to false as they forfeit their turn by drawing a card, as per game mechanics.
+                                        playerList.get(currentPlayerIndex).setPlayerTurnStatus(false);
+                                        playerPassCount += 1;
                                     }
                                     else if(playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection-1) instanceof SuperTrumpCard){
                                         currentTrumpName = playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection-1).getMineralName();
-
                                         //Resetting all player turns, according to the game mechanics of playing a Trump card.
                                         for (Player aPlayer : playerList) {
                                             aPlayer.setPlayerTurnStatus(true);
                                         }
-
                                         //Changing the Trump category in play according to the SuperTrump card properties.
-                                        currentTrump = ((SuperTrumpCard)playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection-1)).getSuperTrumpCardCat(currentTrumpName,currentPlayerIndex,playerList.get(currentPlayerIndex),playerList.get(currentPlayerIndex).getPlayerHand().get(currentPlayerIndex));
+                                        currentTrump = ((SuperTrumpCard)playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection-1)).getSuperTrumpCardCat(currentTrumpName,playerList.get(currentPlayerIndex));
                                         currentDoubleValue = 0;
                                         currentStringValue = "Nothing!";
 
@@ -342,9 +351,10 @@ public class Game {
                                             finishedPlayerList.add("Player" + currentPlayer);
                                             finishedPlayers += 1;
                                             currentTrumpName = null;
+                                            playerCount -= 1;
 
                                             //IF statement used to determine how many players are left. One player remaining ends the game loop.
-                                            if (finishedPlayers == playerCount - 1) {
+                                            if (finishedPlayers  > playerCount) {
                                                 runGame = false;
                                             }
                                         }
@@ -354,32 +364,32 @@ public class Game {
                                             playerPassCount = 0;
                                             //Allowing the player to get another turn, as per game mechanics of playing a Trump card.
                                             x -= 1;
+                                            System.out.println("\nPlayer " + currentPlayer + " has played a super trump card, starting a new round!");
+                                            roundCount += 1;
                                         }
                                     }
-
                                     else{
                                     //Updating variables for Trump Name and Value
                                     currentTrumpName = playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection - 1).getMineralName();
                                     currentDoubleValue = decidingTrumpValue;
-                                    currentStringValue = changeTrumpStringValAuto(currentTrump, (MineralCard)playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection - 1));
-
+                                    currentStringValue = changeTrumpStringValAuto(currentTrump, (MineralCard) playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection - 1));
                                     //Displaying the card that the player has played for the turn and removing it from the player hand.
                                     System.out.println("\nPlayer " + currentPlayer + " has played " + playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection - 1));
                                     playerList.get(currentPlayerIndex).getPlayerHand().remove(playerSelection - 1);
                                     }
+
                                 }
 
                                 //ELSE Trump card is played...
                                 else {
                                     currentTrumpName = playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection-1).getMineralName();
-
                                     //Resetting all player turns, according to the game mechanics of playing a Trump card.
                                     for (Player aPlayer : playerList) {
                                         aPlayer.setPlayerTurnStatus(true);
                                     }
 
                                     //Changing the Trump category in play according to the SuperTrump card properties.
-                                    currentTrump = ((SuperTrumpCard)playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection-1)).getSuperTrumpCardCat(currentTrumpName,currentPlayerIndex,playerList.get(currentPlayerIndex),playerList.get(currentPlayerIndex).getPlayerHand().get(currentPlayerIndex));
+                                    currentTrump = ((SuperTrumpCard)playerList.get(currentPlayerIndex).getPlayerHand().get(playerSelection-1)).getSuperTrumpCardCat(currentTrumpName,playerList.get(currentPlayerIndex));
                                     currentDoubleValue = 0;
                                     currentStringValue = "Nothing!";
 
@@ -389,9 +399,10 @@ public class Game {
                                         finishedPlayerList.add("Player" + currentPlayer);
                                         finishedPlayers += 1;
                                         currentTrumpName = null;
+                                        playerCount =- 1;
 
                                         //IF statement used to determine how many players are left. One player remaining ends the game loop.
-                                        if (finishedPlayers == playerCount - 1) {
+                                        if (finishedPlayers > playerCount) {
                                             runGame = false;
                                         }
                                     }
@@ -403,6 +414,8 @@ public class Game {
                                         //Allowing the player to get another turn, as per game mechanics of playing a Trump card, if he/she still has cards in the hand.
                                         x -= 1;
                                     }
+                                System.out.println("\nPlayer " + currentPlayer + " has played a super trump card, starting a new round!");
+                                roundCount += 1;
                                 }
 
                                 //IF statement used to determine if there are any cards left in the player's hand. If not, he/she wins the game.
@@ -416,9 +429,10 @@ public class Game {
                                         aPlayer.setPlayerTurnStatus(true);
                                     }
                                     playerPassCount = 0;
+                                    playerCount -= 1;
 
                                     //IF statement used to determine how many players are left. One player remaining ends the game loop.
-                                    if (finishedPlayers == playerCount - 1) {
+                                    if (finishedPlayers > playerCount) {
                                         runGame = false;
                                     }
                                 }
@@ -432,19 +446,15 @@ public class Game {
                                     playerList.get(currentPlayerIndex).drawCard(cardDeck.get(dealCard));
                                     cardDeck.remove(dealCard);
                                     totalCardCount -= 1;
-
-                                    //Player turn status is changed to false as they forfeit their turn by drawing a card, as per game mechanics.
-                                    playerList.get(currentPlayerIndex).setPlayerTurnStatus(false);
-                                    playerPassCount += 1;
                                     System.out.println("\nPlayer " + currentPlayer + " has passed and drew a card! \nThe amount of cards left in the deck is: " + totalCardCount + "\nPlease wait for your next turn!");
                                 }
-
                                 //ELSE there are no more cards left in the deck...
                                 else {
-                                    playerList.get(currentPlayerIndex).setPlayerTurnStatus(false);
-                                    playerPassCount += 1;
                                     System.out.println("\nThere are no more cards left in the deck! Please wait for your next turn.");
                                 }
+                                //Player turn status is changed to false as they forfeit their turn by drawing a card, as per game mechanics.
+                                playerList.get(currentPlayerIndex).setPlayerTurnStatus(false);
+                                playerPassCount += 1;
                             }
                         }
                     }

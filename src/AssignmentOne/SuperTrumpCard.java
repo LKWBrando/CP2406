@@ -21,7 +21,7 @@ public class SuperTrumpCard extends Card {
     /*Method getSuperTrumpCardCat passes the String currentTrumpName, which is the name of the card played, or in play,
       integer index of the current player, current Player object, as well as current Card object.
       It returns the trump category associated with the respective trump card, */
-    public String getSuperTrumpCardCat(String currentTrumpName, int currentPlayerIndex, Player aPlayer, Card aCard){
+    public String getSuperTrumpCardCat(String currentTrumpName, Player aPlayer){
         String trumpCardCategory = null;
         int selectUserInput; //Variable that stores the user input integer value
         switch(currentTrumpName) {
@@ -31,28 +31,29 @@ public class SuperTrumpCard extends Card {
                 //Checking the player hand for the specific Card object Magnetite
                 for (int i = 0; i< aPlayer.getPlayerHand().size(); i++){
                     //If the player hand does contain the Card Magnetite...
-                    if (aPlayer.getPlayerHand().get(currentPlayerIndex).getMineralName().equals("Magnetite")){
+                    if (aPlayer.getPlayerHand().get(i).getMineralName().equals("Magnetite")){
                         System.out.println("You have the Magnetite card in your hand, do you want to play it?\nEnter [1] for yes, [2] no");
                         Scanner userInput = new Scanner(System.in);
                         selectUserInput = userInput.nextInt();
                         //IF the player chooses to play the trump card with the Magnetite card
                         if (selectUserInput == 1){
-                            int playerSelection; //Variable used to obtain and store the index value of the trump card
-                            playerSelection = aPlayer.getPlayerHand().indexOf(aCard);
-                            aPlayer.getPlayerHand().remove(playerSelection - 1);
                             trumpCardCategory = "None";
+                            break;
                         }
                         //ELSE the player chooses not to play the trump card with the Magnetite card
                         else{
-                            System.out.println("You have chosen not to play the Magnetite card!\nYou have played The Mineralogist! You have changed the current Trump Category to Specific Gravity. The play value has been reset!");
+                            System.out.println("You have chosen not to play the Magnetite card!\nYou have played The Geophysicist! You have changed the current Trump Category to Specific Gravity. The play value has been reset!");
                             trumpCardCategory = "Specific Gravity";
+                            break;
                         }
                     }
                     //ELSE the player hand does not contain the Card Magnetite...
                     else{
-                        System.out.println("You do not have the Magnetite Card!\nYou have played The Mineralogist! You have changed the current Trump Category to Specific Gravity. The play value has been reset!");
                         trumpCardCategory = "Specific Gravity";
                     }
+                }
+                if (trumpCardCategory.equals("Specific Gravity")) {
+                    System.out.println("You have played The Geophysicist! You have changed the current Trump Category to Specific Gravity. The play value has been reset!");
                 }
                 break;
             //Case for super trump card "The Geologist"

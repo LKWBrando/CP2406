@@ -1,0 +1,55 @@
+Name,Hardness,Gravity,Cleavage,Crustal Abundance,EcoValue
+Quartz,7,2.65,poor/none,high,moderate
+Plagioclase,6.5,2.8,1 perfect/1 good,very high,moderate
+Orthoclase,6.5,2.6,1 perfect/1 good,high,moderate
+Biotite,3,3.3,1 perfect,moderate,low
+Muscovite,3,2.9,1 perfect,moderate,moderate
+Hornblende,6,3.5,2 good,moderate,trivial
+Actinolite,6,3.5,2 good,low,low
+Glaucophane,6,3.2,2 good,low,trivial
+Olivine,7,4.4,2 poor,high,low
+Garnet,7.5,4.3,none,moderate,moderate
+Titanite,5.5,3.6,3 good,low,low
+Zircon,7.5,4.7,2 poor,trace,moderate
+Augite,6.5,3.6,2 good,high,trivial
+Orthopyroxene,6,3.9,2 good,high,trivial
+Chlorite,3,3.3,1 perfect,moderate,low
+Antigorite,4,2.6,1 perfect,low,low
+Talc,1,2.8,1 perfect,low,moderate
+Kaolinite,2.5,2.7,1 perfect,moderate,high
+Andalusite,7,3.15,2 good,low,moderate
+Kyanite,7,3.7,1 perfect/1 good,trace,moderate
+Sillimanite,7.5,3.25,1 perfect/1 good,low,low
+Staurolite,7,3.8,1 good,trace,low
+Epidote,6.5,3.5,1 perfect,moderate,trivial
+Tourmaline,7.5,3.2,2 poor,trace,moderate
+Topaz,8,3.6,1 perfect,ultratrace,low
+Beryl,8,2.9,1 poor,trace,moderate
+Pyrite,6.5,5.0,2 poor,low,moderate
+Pyrrhotite,4.5,4.6,none,low,moderate
+Chalcopyrite,4,4.3,2 poor,low,very high
+Galena,2.5,7.6,3 perfect,trace,high
+Sphalerite,4,4.1,6 perfect,trace,high
+Molybdenite,1.5,4.7,1 perfect,trace,high
+Gold,3,19.3,none,ultratrace,I'm rich!
+Diamond,10,3.5,4 perfect,ultratrace,I'm rich!
+Graphite,2,2.2,1 perfect,trace,moderate
+Halite,2.5,2.2,3 perfect,trace,moderate
+Fluorite,4,3.2,4 perfect,trace,moderate
+Gypsum,2,2.3,1 perfect/2 good,trace,high
+Barite,3.5,4.5,2 perfect/1 good,trace,moderate
+Apatite,5,3.2,2 poor,low,high
+Monazite,5,5.3,1 good/1 poor,trace,moderate
+Calcite,3,2.7,3 perfect,moderate,high
+Dolomite,4,2.9,3 perfect,low,low
+Magnesite,4,3.0,3 perfect,low,moderate
+Siderite,4.5,4.0,3 perfect,trace,moderate
+Magnetite,6,5.2,none,moderate,very high
+Hematite,6,5.3,none,trace,high
+Chromite,5.5,5.1,none,low,high
+Ilmenite,6,4.8,none,low,moderate
+Rutile,6.5,4.3,2 good,low,high
+Corundum,9,4.0,none,trace,moderate
+Cassiterite,7,7.1,1 good/1 poor,trace,high
+Gibbsite,3.5,2.4,1 perfect,low,high
+Goethite,5.5,4.3,1 perfect/1 good,moderate,moderate
