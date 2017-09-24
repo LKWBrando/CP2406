@@ -43,7 +43,7 @@ public class testImage {
             cardMap.put(cardDeck.get(i), imagePathString.get(i));
         }
 
-        BufferedImage newImage = ImageIO.read(new File("C:\\Users\\user\\IdeaProjects\\CP2406\\a2_images\\" + imagePathString.get(0)));
+        BufferedImage newImage = ImageIO.read(new File("C:\\Users\\user\\IdeaProjects\\CP2406\\a2_images\\" + imagePathString.get(5)));
         ImageIcon newIcon = new ImageIcon(newImage.getScaledInstance(200,330, Image.SCALE_SMOOTH));
         JButton newButton = new JButton(newIcon);
         newButton.setPreferredSize(new Dimension(200,330));

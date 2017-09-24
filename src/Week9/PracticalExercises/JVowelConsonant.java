@@ -18,7 +18,7 @@ public class JVowelConsonant extends JFrame implements ActionListener  {
         setLayout(new GridLayout(2,2));
         p1 = new JPanel(new GridLayout(2,2));
         p2 = new JPanel(new GridLayout(2,2));
-        l1 = new JLabel();
+        l1 = new JLabel("Hello");
 
         add(p1);
         add(p2);
