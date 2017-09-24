@@ -72,7 +72,7 @@ public class testGame {
         trumpGui.setVisible(true);
         trumpGui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        int playerCount = 0;
+        /*int playerCount = 0;
         playerCount = trumpGui.getPlayerCount();
         ArrayList<Player> playerList = new ArrayList<Player>();
         int playerListCount = 1;
@@ -80,21 +80,13 @@ public class testGame {
             Player newPlayer = new Player(playerListCount);
             playerListCount += 1;
             playerList.add(newPlayer);
-        }
+        }*/
 
         Random randInt = new Random();
         int totalCardCount = 60;
         int dealCard;
 
-        for (int x = 0; x < playerCount; x++) {
-            for (int y = 0; y < 8; y++) {
-                dealCard = randInt.nextInt(totalCardCount);
-                playerList.get(x).drawCard(cardDeck.get(dealCard));
-                trumpGui.setPlayerHand(imageList.get(dealCard));
-                imageList.remove(dealCard);
-                cardDeck.remove(dealCard);
-                totalCardCount -= 1;
             }
         }
-    }
-}
+
+

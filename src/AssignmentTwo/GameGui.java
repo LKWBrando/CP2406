@@ -10,10 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class GameGui extends JFrame implements ActionListener{
     private JPanel header, body,secondBody, displayTrump;
@@ -24,10 +21,47 @@ public class GameGui extends JFrame implements ActionListener{
     private ArrayList<JButton> playerHand = new ArrayList<JButton>();
     private ArrayList<Card> cardDeck = new ArrayList<Card>();
     private ArrayList<Player> playerList = new ArrayList<Player>();
+    private Map<Card, JButton> cardImageMap = new HashMap<Card, JButton>();
     public int playerCount;
     private Boolean initalMenu = true;
 
     public GameGui() throws IOException {
+        setTitle("SuperTrump Card Game");
+        setSize(1920, 1080);
+        setLayout(new GridLayout(5, 1));
+
+        header = new JPanel();
+        header.setPreferredSize(new Dimension(1920, 150));
+        headerTitle = new JLabel("Welcome to the Mineral Supertrumps game!", SwingConstants.CENTER);
+        header.add(headerTitle);
+        add(header);
+
+        secondBody = new JPanel();
+        secondBody.setPreferredSize(new Dimension(1920, 150));
+        roundCount = new JLabel("Please select the Number of Players", SwingConstants.CENTER);
+        secondBody.add(roundCount);
+        add(secondBody);
+
+        body = new JPanel();
+        body.setPreferredSize(new Dimension(1920, 600));
+        pcThree = new JButton("3 Players!");
+        pcThree.addActionListener(this);
+        pcFour = new JButton("4 Players!");
+        pcFour.addActionListener(this);
+        pcFive = new JButton("5 Players!");
+        pcFive.addActionListener(this);
+        body.add(pcThree);
+        body.add(pcFour);
+        body.add(pcFive);
+        add(body);
+
+        displayTrump = new JPanel(new GridLayout(1, 5));
+        displayTrump.setPreferredSize(new Dimension(1920, 150));
+        add(displayTrump);
+
+        footer = new JLabel("Welcome to the Mineral Supertrumps game!", SwingConstants.CENTER);
+        add(footer);
+
         //Reading from the card.txt file, taking each line in the txt file, splitting it, and appending seperated values as variables of a new Card object
         FileReader readFile = new FileReader(".\\card.txt");
         BufferedReader newFileLine = new BufferedReader(readFile);
@@ -64,135 +98,72 @@ public class GameGui extends JFrame implements ActionListener{
             imagePathString.add(fileName.getName());
             fileCount += 1;
         }
-        System.out.println(imagePathString);
 
         for (int i = 0; i < imagePathString.size(); i++) {
             BufferedImage newImage = ImageIO.read(new File("C:\\Users\\user\\IdeaProjects\\CP2406\\a2_images\\" + imagePathString.get(i)));
-            ImageIcon newIcon = new ImageIcon(newImage.getScaledInstance(200, 330, Image.SCALE_SMOOTH));
+            ImageIcon newIcon = new ImageIcon(newImage.getScaledInstance(150, 400, Image.SCALE_SMOOTH));
             JButton newButton = new JButton(newIcon);
             newButton.addActionListener(this);
             imageList.add(newButton);
         }
 
-        Map<Card, JButton> cardImageMap = new HashMap<Card, JButton>();
         for (int i = 0; i < cardDeck.size(); i++) {
             cardImageMap.put(cardDeck.get(i), imageList.get(i));
         }
-
-        ArrayList<JButton> imageList = new ArrayList<JButton>();
-        for (int i = 0; i < imagePathString.size(); i++) {
-            BufferedImage newImage = ImageIO.read(new File("C:\\Users\\user\\IdeaProjects\\CP2406\\a2_images\\" + imagePathString.get(i)));
-            ImageIcon newIcon = new ImageIcon(newImage.getScaledInstance(200, 330, Image.SCALE_SMOOTH));
-            JButton newButton = new JButton(newIcon);
-            imageList.add(newButton);
-        }
-
-        setTitle("SuperTrump Card Game");
-        setSize(1980, 782);
-        setLayout(new GridLayout(5, 1));
-
-        header = new JPanel();
-        headerTitle = new JLabel("Welcome to the Mineral Supertrumps game!", SwingConstants.CENTER);
-        header.add(headerTitle);
-        add(header);
-
-        secondBody = new JPanel();
-        roundCount = new JLabel("Please select the Number of Players", SwingConstants.CENTER);
-        secondBody.add(roundCount);
-        add(secondBody);
-
-        body = new JPanel();
-        pcThree = new JButton("3 Players!");
-        pcThree.addActionListener(this);
-        pcFour = new JButton("4 Players!");
-        pcFour.addActionListener(this);
-        pcFive = new JButton("5 Players!");
-        pcFive.addActionListener(this);
-        body.add(pcThree);
-        body.add(pcFour);
-        body.add(pcFive);
-        add(body);
-
-        displayTrump = new JPanel(new GridLayout(1, 5));
-        add(displayTrump);
-
-        footer = new JLabel("Welcome to the Mineral Supertrumps game!", SwingConstants.CENTER);
-        add(footer);
-
-
-    }
-
-    public int getPlayerCount() {
-        return playerCount;
     }
 
     public void setPlayerCount(int playerCount) {
         this.playerCount = playerCount;
     }
 
-    public void actionPerformed(ActionEvent e) {
-        JButton clickedButton = (JButton) e.getSource();
-
-        while (initalMenu) {
-            switch (clickedButton.getText()) {
-                case "3 Players!":
-                    setPlayerCount(3);
-                    break;
-                case "4 Players!":
-                    setPlayerCount(4);
-                    break;
-                case "5 Players!":
-                    setPlayerCount(5);
-                    break;
-            }
-            initalMenu = false;
-            roundCount.setText("You have selected " + playerCount + " players!");
-            body.removeAll();
-
-            //Creating an arraylist to store the Player objects, based on the amount of players entered
-            int playerListCount = 1;
-            for (int x = 1; x <= playerCount; x++) {
-                Player newPlayer = new Player(playerListCount);
-                playerListCount += 1;
-                playerList.add(newPlayer);
-            }
-            //Initialising the player hand, dealing eight cards randomly to each of the player
-            Random randInt = new Random();
-            int totalCardCount = 60;
-            int dealCard;
-            for (int x = 0; x < playerCount; x++) {
-                for (int y = 0; y < 8; y++) {
-                    dealCard = randInt.nextInt(totalCardCount);
-                    playerList.get(x).drawCard(cardDeck.get(dealCard));
-                    cardDeck.remove(dealCard);
-                    totalCardCount -= 1;
-                }
-            }
+    public void displayPlayerHand(){
+        for (int i = 0 ; i < playerList.get(0).getPlayerHand().size(); i++){
+            body.add(cardImageMap.get(playerList.get(0).getPlayerHand().get(i))).setPreferredSize(new Dimension(150,400));
             revalidate();
             repaint();
         }
-        int playerSelection = 0; //Variable based on player input for card selection from their hand
-        ArrayList<Integer> finishedPlayerList = new ArrayList<Integer>(); //Arraylist to store finished players according to their ranking.
-        int finishedPlayers = 0; //Variable used to count the number of finished players.
-        int roundCount = 0; //Variable used to count the number of rounds
-        int currentPlayer;//Variable used to indicate the current player.
-        int currentPlayerIndex;//Variable used to indicate the arraylist index of the current player.
-        int playerPassCount = 0; //Variable used to count the number of players that has passed their turn.
-        String currentTrump = null; //Variable based on current Trump category in play.
-        String currentTrumpName = null; //Variable based on name of the current card in play.
-        double currentDoubleValue = 0; //Variable based on the current double value of the Trump category of the card in play.
-        String currentStringValue = "Nothing!"; //Variable based on the String values of some of the Trump category of the card in play.
-        Boolean runGame = true; //Boolean Variable used to create an endless loop
+    }
 
-        while (true){
-            for (int x = 0; x < (playerCount + finishedPlayers); x++){
-                currentPlayer = x + 1;
-                currentPlayerIndex = x;
-                if (playerList.get(currentPlayerIndex).getPlayerGameStatus()) {
-                    System.out.println("\nPlayer " + currentPlayer + "'s Turn! \n");
+    public void actionPerformed(ActionEvent e) {
+        JButton clickedButton = (JButton) e.getSource();
+        switch (clickedButton.getText()) {
+            case "3 Players!":
+                setPlayerCount(3);
+                break;
+            case "4 Players!":
+                setPlayerCount(4);
+                break;
+            case "5 Players!":
+                setPlayerCount(5);
+                break;
+            default:
+                break;
+        }
+        body.removeAll();
+        revalidate();
+        repaint();
+
+        roundCount.setText("You have selected " + playerCount + " players!");
+
+        //Creating an arraylist to store the Player objects, based on the amount of players entered
+        int playerListCount = 1;
+        for (int x = 1; x <= playerCount; x++) {
+            Player newPlayer = new Player(playerListCount);
+            playerListCount += 1;
+            playerList.add(newPlayer);
+        }
+        //Initialising the player hand, dealing eight cards randomly to each of the player
+        Random randInt = new Random();
+        int totalCardCount = 60;
+        int dealCard;
+        for (int x = 0; x < playerCount; x++) {
+            for (int y = 0; y < 8; y++) {
+                dealCard = randInt.nextInt(totalCardCount);
+                playerList.get(x).drawCard(cardDeck.get(dealCard));
+                cardDeck.remove(dealCard);
+                totalCardCount -= 1;
                 }
             }
-        }
     }
 
     public static void main(String[] args) throws IOException {
