@@ -1,11 +1,9 @@
 package AssignmentTwo;
 
-
-import com.sun.deploy.panel.JavaPanel;
-
 import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +12,7 @@ import java.io.*;
 import java.util.*;
 
 public class GameGui extends JFrame implements ActionListener{
-    private JPanel header, body,secondBody, displayTrump, displayInfo;
+    private JPanel header, body,secondBody, displayTrump, displayInfo, northPanel, centerPanel, southPanel;
     private JLabel headerTitle, secondHeader, displayCurrentCard, footer;
     private JButton pcThree, pcFour, pcFive, hardness, sGravity, cleavage, cAbundance, EValue, passTurn;
     private ArrayList<JButton> imageList = new ArrayList<JButton>();
@@ -38,35 +36,44 @@ public class GameGui extends JFrame implements ActionListener{
     int totalCardCount = 60;
     int dealCard;
     double decidingTrumpValue;
-    Card placeHolder;
+    Card tempCardObject;
 
     public GameGui() throws IOException{
         setTitle("SuperTrump Card Game");
         setSize(1920, 1080);
-        setLayout(new GridLayout(5, 1));
+        setLayout(new BorderLayout());
 
-        header = new JPanel();
-        header.setPreferredSize(new Dimension(1920, 80));
+        northPanel = new JPanel();
+        northPanel.setLayout(new GridLayout(2,1));
+        northPanel.setPreferredSize(new Dimension(1920, 100));
+        centerPanel = new JPanel();
+        //centerPanel.setPreferredSize(new Dimension(1920, 880));
+        southPanel = new JPanel();
+        southPanel.setLayout(new GridLayout(2, 1));
+        southPanel.setPreferredSize(new Dimension(1920, 100));
+
+        //header = new JPanel();
+        //header.setPreferredSize(new Dimension(1920, 80));
         headerTitle = new JLabel("Welcome to the Mineral Supertrumps game!", SwingConstants.CENTER);
-        header.add(headerTitle);
-        add(header);
+        northPanel.add(headerTitle);
+        //add(header);
 
-        secondBody = new JPanel();
-        secondBody.setPreferredSize(new Dimension(1920, 100));
+        //secondBody = new JPanel();
+        //secondBody.setPreferredSize(new Dimension(1920, 100));
         secondHeader = new JLabel("Please select the Number of Players", SwingConstants.CENTER);
-        secondBody.add(secondHeader);
-        add(secondBody);
+        northPanel.add(secondHeader);
+        //add(secondBody);
 
-        body = new JPanel();
-        body.setPreferredSize(new Dimension(1920, 720));
-
+        //body = new JPanel();
+        //body.setPreferredSize(new Dimension(1920, 720));
+        add(northPanel, BorderLayout.NORTH);
 
         pcThree = new JButton("3 Players!");
         pcThree.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 playerCount = 3;
-                body.removeAll();
+                centerPanel.removeAll();
                 revalidate();
                 repaint();
                 initPlayParameters();
@@ -77,7 +84,7 @@ public class GameGui extends JFrame implements ActionListener{
             @Override
             public void actionPerformed(ActionEvent e) {
                 playerCount = 4;
-                body.removeAll();
+                centerPanel.removeAll();
                 revalidate();
                 repaint();
                 initPlayParameters();
@@ -88,24 +95,23 @@ public class GameGui extends JFrame implements ActionListener{
             @Override
             public void actionPerformed(ActionEvent e) {
                 playerCount = 5;
-                body.removeAll();
+                centerPanel.removeAll();
                 revalidate();
                 repaint();
                 initPlayParameters();
             }
         });
-        body.add(pcThree);
-        body.add(pcFour);
-        body.add(pcFive);
-        add(body);
+        centerPanel.add(pcThree);
+        centerPanel.add(pcFour);
+        centerPanel.add(pcFive);
+        add(centerPanel, BorderLayout.CENTER);
 
         displayCurrentCard = new JLabel();
         displayCurrentCard.setPreferredSize(new Dimension(1000,50));
-        displayCurrentCard.setVisible(false);
 
         displayTrump = new JPanel(new GridLayout(1, 5));
         displayTrump.setPreferredSize(new Dimension(1000, 50));
-        displayTrump.setVisible(false);
+
         hardness = new JButton("Hardness");
         hardness.setPreferredSize(new Dimension(200,50));
         hardness.addActionListener(this);
@@ -128,14 +134,14 @@ public class GameGui extends JFrame implements ActionListener{
         displayTrump.add(cAbundance);
         displayTrump.add(EValue);
 
-        displayInfo = new JPanel();
-        displayInfo.add(displayTrump);
-        displayInfo.add(displayCurrentCard);
-        add(displayInfo);
+        //displayInfo = new JPanel();
+        southPanel.add(displayCurrentCard);
 
         footer = new JLabel("Welcome to the Mineral Supertrumps game!", SwingConstants.CENTER);
-        footer.setPreferredSize(new Dimension(1920, 80));
-        add(footer);
+        footer.setPreferredSize(new Dimension(1920, 50));
+
+        southPanel.add(footer);
+        add(southPanel, BorderLayout.SOUTH);
 
         passTurn = new JButton("Pass your turn and draw a card.");
         passTurn.addActionListener(new ActionListener() {
@@ -147,11 +153,11 @@ public class GameGui extends JFrame implements ActionListener{
                     playerList.get(currentPlayerIndex).drawCard(cardDeck.get(dealCard));
                     cardDeck.remove(dealCard);
                     totalCardCount -= 1;
-                    System.out.println("\nPlayer " + (currentPlayerIndex +1) + " has passed and drew a card! \nThe amount of cards left in the deck is: " + totalCardCount + "\nPlease wait for your next turn!");
+                    System.out.println("Player " + (currentPlayerIndex +1) + " has passed and drew a card! \nThe amount of cards left in the deck is: " + totalCardCount + "\nPlease wait for your next turn!");
                 }
                 //ELSE there are no more cards left in the deck...
                 else {
-                    System.out.println("\nThere are no more cards left in the deck! Please wait for your next turn.");
+                    System.out.println("There are no more cards left in the deck! Please wait for your next turn.");
                 }
                 //Player turn status is changed to false as they forfeit their turn by drawing a card, as per game mechanics.
                 playerList.get(currentPlayerIndex).setPlayerTurnStatus(false);
@@ -192,7 +198,7 @@ public class GameGui extends JFrame implements ActionListener{
         //Creating Jbuttons based on mineral images
         for (int i = 0; i < cardDeck.size(); i++) {
             BufferedImage newImage = ImageIO.read(new File("C:\\Users\\user\\IdeaProjects\\CP2406\\a2_images\\" + imagePathString.get(i)));
-            ImageIcon newIcon = new ImageIcon(newImage.getScaledInstance(150, 400, Image.SCALE_SMOOTH));
+            ImageIcon newIcon = new ImageIcon(newImage.getScaledInstance(150, 500, Image.SCALE_SMOOTH));
             JButton newButton = new JButton(newIcon);
             newButton.addActionListener(this);
             imageList.add(newButton);
@@ -209,9 +215,9 @@ public class GameGui extends JFrame implements ActionListener{
     }
     //Display
     public void displayPlayerHand(int x){
-        body.removeAll();
+        centerPanel.removeAll();
         for (int i = 0 ; i < playerList.get(x).getPlayerHand().size(); i++){
-            body.add(cardToButtonMap.get(playerList.get(x).getPlayerHand().get(i))).setPreferredSize(new Dimension(150,400));
+            centerPanel.add(cardToButtonMap.get(playerList.get(x).getPlayerHand().get(i))).setPreferredSize(new Dimension(150,400));
             revalidate();
             repaint();
         }
@@ -227,12 +233,14 @@ public class GameGui extends JFrame implements ActionListener{
                     footer.setText("You have selected: " + cardObject);
 
                     //As the player of the first card of the round, he/she is allowed to choose any of the categories in play
-                    body.removeAll();
-                    body.add(clickedButton);
-                    displayTrump.setVisible(true);
+                    centerPanel.removeAll();
+                    centerPanel.add(clickedButton);
+                    southPanel.removeAll();
+                    southPanel.add(displayTrump);
+                    southPanel.add(footer);
                     revalidate();
                     repaint();
-                    placeHolder = cardObject;
+                    tempCardObject = cardObject;
                 }
 
                 //ELSE Trump card is played...
@@ -282,7 +290,7 @@ public class GameGui extends JFrame implements ActionListener{
                         footer.setText("The card you want to play has a lower value than the card in play! Please select another card.");
                     }
                     else{
-                        currentTrumpName = placeHolder.getMineralName();
+                        currentTrumpName = tempCardObject.getMineralName();
                         currentDoubleValue = changeTrumpValue(currentTrump, (MineralCard) cardObject);
                         currentStringValue = changeTrumpStringValue(currentTrump, (MineralCard) cardObject);
                         secondHeader.setText("Player " + (currentPlayerIndex +1) + " has played " + cardObject);
@@ -330,16 +338,17 @@ public class GameGui extends JFrame implements ActionListener{
             System.out.println("Test");
             setTrumpCategory(clickedButton.getText());
 
-            displayTrump.setVisible(false);
-            displayCurrentCard.setVisible(true);
+            southPanel.removeAll();
+            southPanel.add(displayCurrentCard);
+            southPanel.add(footer);
 
-            currentTrumpName = placeHolder.getMineralName();
-            currentDoubleValue = changeTrumpValue(currentTrump, (MineralCard) placeHolder);
-            currentStringValue = changeTrumpStringValue(currentTrump, (MineralCard) placeHolder);
+            currentTrumpName = tempCardObject.getMineralName();
+            currentDoubleValue = changeTrumpValue(currentTrump, (MineralCard) tempCardObject);
+            currentStringValue = changeTrumpStringValue(currentTrump, (MineralCard) tempCardObject);
 
             //Displaying the card that the player has played for the turn, then removing it from the player hand.
-            secondHeader.setText("Player " + (currentPlayerIndex +1) + " has played " + placeHolder);
-            playerList.get(currentPlayerIndex).getPlayerHand().remove(placeHolder);
+            secondHeader.setText("Player " + (currentPlayerIndex +1) + " has played " + tempCardObject);
+            playerList.get(currentPlayerIndex).getPlayerHand().remove(tempCardObject);
 
             if (currentTrump.equals("Cleavage") || currentTrump.equals("Crystal Abundance") || currentTrump.equals("Economic Value")) {
                 displayCurrentCard.setText("The current Trump cat is: " + currentTrump + " and the value is: " + currentStringValue);
@@ -398,7 +407,6 @@ public class GameGui extends JFrame implements ActionListener{
         if(playerList.get(currentPlayerIndex).getPlayerGameStatus()){
         headerTitle.setText("Player " + (currentPlayerIndex +1) + " 's turn!");
         displayPlayerHand(currentPlayerIndex);
-        body.add(passTurn);
         revalidate();
         repaint();
         }
