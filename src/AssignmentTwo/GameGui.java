@@ -14,28 +14,25 @@ public class GameGui extends JFrame implements ActionListener{
     private JPanel displayTrump, northPanel, centerPanel, southPanel, displayCurrentCard;
     private JLabel headerTitle, secondHeader, displayCurrentCardText, footer;
     private JButton pcThree, pcFour, pcFive, hardness, sGravity, cleavage, cAbundance, EValue, passTurn;
-    private ArrayList<JButton> imageList = new ArrayList<JButton>();
-    private ArrayList<String> imagePathString = new ArrayList<String>();
     private ArrayList<Card> cardDeck = new ArrayList<Card>();
     private ArrayList<Player> playerList = new ArrayList<Player>();
+    private ArrayList<Integer> finishedPlayerList = new ArrayList<Integer>(); //Arraylist to store finished players according to their ranking.
     private Map<Card, JButton> cardToButtonMap = new HashMap<Card, JButton>();
     private Map<JButton, Card> buttonToCardMap = new HashMap<JButton, Card>();
-    public int playerCount;
-    ArrayList<Integer> finishedPlayerList = new ArrayList<Integer>(); //Arraylist to store finished players according to their ranking.
-    int finishedPlayers = 0; //Variable used to count the number of finished players.
-    int roundCount = 0; //Variable used to count the number of rounds
-    int currentPlayerIndex;//Variable used to indicate the arraylist index of the current player.
-    int playerPassCount = 0; //Variable used to count the number of players that has passed their turn.
-    String currentTrump = null; //Variable based on current Trump category in play.
-    String currentTrumpName = null; //Variable based on name of the current card in play.
-    double currentDoubleValue = 0; //Variable based on the current double value of the Trump category of the card in play.
-    String currentStringValue = "Nothing!"; //Variable based on the String values of some of the Trump category of the card in play.
-    Boolean runGame = true;
-    int playerTurnCount = 0;
-    int totalCardCount = 60;
-    int dealCard;
-    double decidingTrumpValue;
-    Card tempCardObject;
+    private int playerCount; //Variable used to store the number of players in the game.
+    private int currentPlayerIndex;//Variable used to indicate the arraylist index of the current player.
+    private int roundCount = 0; //Variable used to count the number of rounds
+    private int playerPassCount = 0; //Variable used to count the number of players that has passed their turn.
+    private int finishedPlayers = 0; //Variable used to count the number of finished players.
+    private String currentTrump = null; //Variable based on current Trump category in play.
+    private String currentTrumpName = null; //Variable based on name of the current card in play.
+    private double currentDoubleValue = 0; //Variable based on the current double value of the Trump category of the card in play.
+    private String currentStringValue = "Nothing!"; //Variable based on the String values of some of the Trump category of the card in play.
+    private int playerTurnCount = 0;
+    private int totalCardCount = 60;
+    private int dealCard;
+    private double decidingTrumpValue;
+    private Card tempCardObject;
 
     public GameGui() throws IOException{
         setTitle("SuperTrump Card Game");
@@ -47,25 +44,17 @@ public class GameGui extends JFrame implements ActionListener{
         northPanel.setPreferredSize(new Dimension(1920, 150));
         centerPanel = new JPanel();
         centerPanel.setPreferredSize(new Dimension(1920,600));
-        //centerPanel.setPreferredSize(new Dimension(1920, 880));
         southPanel = new JPanel();
         southPanel.setLayout(new GridLayout(2, 1));
         southPanel.setPreferredSize(new Dimension(1920, 150));
 
-        //header = new JPanel();
-        //header.setPreferredSize(new Dimension(1920, 80));
+
         headerTitle = new JLabel("Welcome to the Mineral Supertrumps game!", SwingConstants.CENTER);
         northPanel.add(headerTitle);
-        //add(header);
 
-        //secondBody = new JPanel();
-        //secondBody.setPreferredSize(new Dimension(1920, 100));
         secondHeader = new JLabel("Please select the Number of Players", SwingConstants.CENTER);
         northPanel.add(secondHeader);
-        //add(secondBody);
 
-        //body = new JPanel();
-        //body.setPreferredSize(new Dimension(1920, 720));
         add(northPanel, BorderLayout.NORTH);
 
         pcThree = new JButton("3 Players!");
@@ -167,31 +156,31 @@ public class GameGui extends JFrame implements ActionListener{
         SuperTrumpCard theGeologist = new SuperTrumpCard("The Geologist", "Change to trump category of your choice");
         cardDeck.add(theGeologist);
 
+        ArrayList<String> imageFileLocation = new ArrayList<String>(); //Arraylist to store the string values of the file names
         File[] imageFiles = new File("C:\\Users\\user\\IdeaProjects\\CP2406\\a2_images").listFiles();
         for (File fileName : imageFiles) {
-            imagePathString.add(fileName.getName());
+            imageFileLocation.add(fileName.getName());
         }
+
+        ArrayList<JButton> cardImageList = new ArrayList<JButton>(); //Arraylist to store the JButtons containing the images of the card objects
         //Creating Jbuttons based on mineral images
         for (int i = 0; i < cardDeck.size(); i++) {
-            BufferedImage newImage = ImageIO.read(new File("C:\\Users\\user\\IdeaProjects\\CP2406\\a2_images\\" + imagePathString.get(i)));
+            BufferedImage newImage = ImageIO.read(new File("C:\\Users\\user\\IdeaProjects\\CP2406\\a2_images\\" + imageFileLocation.get(i)));
             ImageIcon newIcon = new ImageIcon(newImage.getScaledInstance(130, 350, Image.SCALE_SMOOTH));
             JButton newButton = new JButton(newIcon);
             newButton.setPreferredSize(new Dimension(130,350));
             newButton.addActionListener(this);
-            imageList.add(newButton);
+            cardImageList.add(newButton);
         }
-        //Mapping
+        //Mapping of the JButtons to the Card objects, and vice versa, allowing them to be used as keys to obtain the values of each other.
         for(int i = 0; i<cardDeck.size(); i++){
-            cardToButtonMap.put(cardDeck.get(i), imageList.get(i));
-            buttonToCardMap.put(imageList.get(i), cardDeck.get(i));
+            cardToButtonMap.put(cardDeck.get(i), cardImageList.get(i));
+            buttonToCardMap.put(cardImageList.get(i), cardDeck.get(i));
         }
     }
 
-    public void setTrumpCategory(String trumpCategory){
-        this.currentTrump = trumpCategory;
-    }
-    //Display
-    public void displayPlayerHand(int x){
+    //Method to remove all previous card object buttons in the centerpanel, and add the card object buttons from the current player's hand.
+    private void displayPlayerHand(int x){
         centerPanel.removeAll();
         for (int i = 0 ; i < playerList.get(x).getPlayerHand().size(); i++){
             centerPanel.add(cardToButtonMap.get(playerList.get(x).getPlayerHand().get(i))).setPreferredSize(new Dimension(130,350));
@@ -199,10 +188,12 @@ public class GameGui extends JFrame implements ActionListener{
             repaint();
         }
     }
+
     //When a button is clicked
     public void actionPerformed(ActionEvent e){
         JButton clickedButton = (JButton) e.getSource();
 
+        //IF button clicked is an instance of a Card
         if(buttonToCardMap.get(clickedButton) instanceof MineralCard || buttonToCardMap.get(clickedButton) instanceof SuperTrumpCard){
             Card cardObject = buttonToCardMap.get(clickedButton);
             if (currentTrumpName == null) {
@@ -240,7 +231,7 @@ public class GameGui extends JFrame implements ActionListener{
 
                         //IF statement used to determine how many players are left. One player remaining ends the game loop.
                         if (finishedPlayers > playerCount) {
-                            runGame = false;
+                            //runGame = false;
                         }
                     } else {
                         //Displaying the card that the player has played for the turn and removing it from the player hand.
@@ -257,6 +248,8 @@ public class GameGui extends JFrame implements ActionListener{
                         roundCount += 1;
                         currentPlayerIndex -= 1;
                         checkWinCondition();
+                        revalidate();
+                        repaint();
                     }
                 }
             }else{
@@ -308,6 +301,7 @@ public class GameGui extends JFrame implements ActionListener{
                 }
             }
         }
+        //ELSE IF button clicked is the Pass button
         else if (clickedButton.getText().equals("Pass")){
             Random randInt = new Random();
             if (totalCardCount != 0) {
@@ -331,8 +325,9 @@ public class GameGui extends JFrame implements ActionListener{
             }
             runGame();
         }
+        //ELSE the button clicked is one of the five selectable trump categories.
         else {
-            setTrumpCategory(clickedButton.getText());
+            currentTrump = (clickedButton.getText());
 
             displayCurrentCard.remove(displayTrump);
             displayCurrentCard.add(displayCurrentCardText);
@@ -357,26 +352,7 @@ public class GameGui extends JFrame implements ActionListener{
         }
     }
 
-    public void checkWinCondition(){
-        if (playerList.get(currentPlayerIndex).getPlayerHand().isEmpty()){
-            secondHeader.setText("Player " + (currentPlayerIndex +1) + " has finished the game! The game is restarting, remaining players get ready!");
-            playerList.get(currentPlayerIndex).setPlayerGameStatus(false);
-            finishedPlayerList.add((currentPlayerIndex +1));
-            finishedPlayers += 1;
-            currentTrumpName = null;
-            for (Player aPlayer : playerList) {
-                aPlayer.setPlayerTurnStatus(true);
-            }
-            playerPassCount = 0;
-            playerCount -= 1;
-        }
-        currentPlayerIndex += 1;
-        if (currentPlayerIndex == playerCount){
-            currentPlayerIndex = 0;
-        }
-        runGame();
-    }
-
+    //Method to start the game by creating player objects based on number of players selected, and assigning card objects to the player's hand.
     public void initPlayParameters(){
         int playerListCount = 1;
         for (int x = 1; x <= playerCount; x++) {
@@ -398,6 +374,28 @@ public class GameGui extends JFrame implements ActionListener{
         runGame();
     }
 
+    //Method to check if player hand is empty after each card play, so as to determine if the player has won the game.
+    public void checkWinCondition(){
+        if (playerList.get(currentPlayerIndex).getPlayerHand().isEmpty()){
+            secondHeader.setText("Player " + (currentPlayerIndex +1) + " has finished the game! The game is restarting, remaining players get ready!");
+            playerList.get(currentPlayerIndex).setPlayerGameStatus(false);
+            finishedPlayerList.add((currentPlayerIndex +1));
+            finishedPlayers += 1;
+            currentTrumpName = null;
+            for (Player aPlayer : playerList) {
+                aPlayer.setPlayerTurnStatus(true);
+            }
+            playerPassCount = 0;
+            playerCount -= 1;
+        }
+        currentPlayerIndex += 1;
+        if (currentPlayerIndex == playerCount){
+            currentPlayerIndex = 0;
+        }
+        runGame();
+    }
+
+    //Recursive method to check if all but one player has passed, and to reset the round if that is the case.
     public void checkPlayerStatus(){
         if (playerList.get(currentPlayerIndex).getPlayerTurnStatus() && (playerPassCount == (playerCount - 1))) {
             currentTrumpName = null;
@@ -409,6 +407,7 @@ public class GameGui extends JFrame implements ActionListener{
                 aPlayer.setPlayerTurnStatus(true);
             }
         }
+        //else cycle through the players to determine if they are still playing or have passed.
         else{
             while(!playerList.get(currentPlayerIndex).getPlayerTurnStatus()) {
                 currentPlayerIndex += 1;
@@ -422,8 +421,10 @@ public class GameGui extends JFrame implements ActionListener{
         repaint();
     }
 
+    //Method used to reset the center panel of the game, and moves the game along by adding buttons according to the player's hand and status
     public void runGame(){
         checkPlayerStatus();
+        centerPanel.removeAll();
         headerTitle.setText("Player " + (currentPlayerIndex +1) + " 's turn!");
         if(currentTrumpName == null){
             displayCurrentCard.remove(passTurn);
