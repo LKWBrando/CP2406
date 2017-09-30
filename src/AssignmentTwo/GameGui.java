@@ -147,7 +147,7 @@ public class GameGui extends JFrame implements ActionListener{
             @Override
             public void actionPerformed(ActionEvent e) {
                 currentTrump = "Specific Gravity";
-                displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump cat is: " + currentTrump + "<br>The current value is: " + currentDoubleValue + " </div></html>");
+                displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump category is: " + currentTrump + "<br>The current value is: " + currentDoubleValue + " </div></html>");
                 checkWinCondition();
             }
         });
@@ -253,9 +253,9 @@ public class GameGui extends JFrame implements ActionListener{
                     getTrumpCardCat(); //Run method to determine actions for the trump card played.
                     secondHeader.setText("<html><div style='text-align: center;'>Player " + (currentPlayerIndex +1) + " has played the Trump Card: " + currentTrumpName + "<br>Player " + (currentPlayerIndex +1) + " gets another turn! All players get their turns back as well!</div></html>");
                     if (currentTrump.equals("Cleavage") || currentTrump.equals("Crystal Abundance") || currentTrump.equals("Economic Value")) {
-                        displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump cat is: " + currentTrump + "<br>The current value is: " + currentStringValue + " </div></html>");
+                        displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump category is: " + currentTrump + "<br>The current value is: " + currentStringValue + " </div></html>");
                     } else {
-                        displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump cat is: " + currentTrump + "<br>The current value is: " + currentDoubleValue + " </div></html>");
+                        displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump category is: " + currentTrump + "<br>The current value is: " + currentDoubleValue + " </div></html>");
                     }
                     playerList.get(currentPlayerIndex).getPlayerHand().remove(cardObject);
                     playerPassCount = 0;
@@ -278,9 +278,9 @@ public class GameGui extends JFrame implements ActionListener{
                         secondHeader.setText("Player " + (currentPlayerIndex +1) + " has played " + cardObject);
                         playerList.get(currentPlayerIndex).getPlayerHand().remove(cardObject);
                         if (currentTrump.equals("Cleavage") || currentTrump.equals("Crystal Abundance") || currentTrump.equals("Economic Value")) {
-                            displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump cat is: " + currentTrump + "<br>The current value is: " + currentStringValue + " </div></html>");
+                            displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump category is: " + currentTrump + "<br>The current value is: " + currentStringValue + " </div></html>");
                         } else {
-                            displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump cat is: " + currentTrump + "<br>The current value is: " + currentDoubleValue + " </div></html>");
+                            displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump category is: " + currentTrump + "<br>The current value is: " + currentDoubleValue + " </div></html>");
                         }
                         footer.setText("Select a card to play or draw a card and pass");
                         checkWinCondition();
@@ -298,9 +298,9 @@ public class GameGui extends JFrame implements ActionListener{
                     getTrumpCardCat();//Run method to determine actions for the trump card played.
                     secondHeader.setText("<html>Player " + (currentPlayerIndex +1) + " has played the Trump Card: " + currentTrumpName + "<br>Player " + (currentPlayerIndex +1) + " gets another turn! All players get their turns back as well!</html>");
                     if (currentTrump.equals("Cleavage") || currentTrump.equals("Crystal Abundance") || currentTrump.equals("Economic Value")) {
-                        displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump cat is: " + currentTrump + "<br>The current value is: " + currentStringValue + " </div></html>");
+                        displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump category is: " + currentTrump + "<br>The current value is: " + currentStringValue + " </div></html>");
                     } else {
-                        displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump cat is: " + currentTrump + "<br>The current value is: " + currentDoubleValue + " </div></html>");
+                        displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump category is: " + currentTrump + "<br>The current value is: " + currentDoubleValue + " </div></html>");
                     }
                     playerList.get(currentPlayerIndex).getPlayerHand().remove(cardObject);
                     playerPassCount = 0;
@@ -360,9 +360,9 @@ public class GameGui extends JFrame implements ActionListener{
             footer.setText("Select a card to play or draw a card and pass");
             }
             if (currentTrump.equals("Cleavage") || currentTrump.equals("Crystal Abundance") || currentTrump.equals("Economic Value")) {
-                displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump cat is: " + currentTrump + "<br>The current value is: " + currentStringValue + " </div></html>");
+                displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump category is: " + currentTrump + "<br>The current value is: " + currentStringValue + " </div></html>");
             } else {
-                displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump cat is: " + currentTrump + "<br>The current value is: " + currentDoubleValue + " </div></html>");
+                displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump category is: " + currentTrump + "<br>The current value is: " + currentDoubleValue + " </div></html>");
             }
             checkWinCondition();
             revalidate();
@@ -428,6 +428,7 @@ public class GameGui extends JFrame implements ActionListener{
                 printFinishedPlayers = printFinishedPlayers + " Player: " + finishedPlayerList.get(i);
             }
             displayCurrentCardText.setText(printFinishedPlayers);
+            displayCurrentInfo.remove(passTurn);
         }
         else if(!playerList.get(currentPlayerIndex).getPlayerGameStatus()){
             while(!playerList.get(currentPlayerIndex).getPlayerGameStatus()){
@@ -481,6 +482,7 @@ public class GameGui extends JFrame implements ActionListener{
                 displayCurrentInfo.add(passTurn);
             }
             displayPlayerHand(currentPlayerIndex);
+            footer.setText("Select a card to play or draw a card and pass");
             revalidate();
             repaint();
         }
