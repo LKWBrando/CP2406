@@ -13,7 +13,7 @@ import java.util.*;
 public class GameGui extends JFrame implements ActionListener{
     private JPanel displayTrump, northPanel, centerPanel, southPanel, displayCurrentInfo, titlePanel;
     private JLabel headerTitle, secondHeader, displayCurrentCardText, footer, displayPassedPlayers;
-    private JButton pcThree, pcFour, pcFive, hardness, sGravity, cleavage, cAbundance, EValue, passTurn;
+    private JButton pcThree, pcFour, pcFive, hardness, sGravity, cleavage, cAbundance, EValue, passTurn, magWinCond1, magWinCond2;
     private ArrayList<Card> cardDeck = new ArrayList<Card>();
     private ArrayList<Player> playerList = new ArrayList<Player>();
     private ArrayList<Integer> finishedPlayerList = new ArrayList<Integer>(); //Arraylist to store finished players according to their ranking.
@@ -111,6 +111,11 @@ public class GameGui extends JFrame implements ActionListener{
         EValue.setPreferredSize(new Dimension(175,60));
         EValue.addActionListener(this);
 
+        magWinCond1 = new JButton("Yes");
+        magWinCond1.setPreferredSize(new Dimension(175,60));
+        magWinCond2 = new JButton("No");
+        magWinCond2.setPreferredSize(new Dimension(175,60));
+
         displayTrump = new JPanel(new GridLayout(1, 5));
         displayTrump.setPreferredSize(new Dimension(1000, 75));
         displayTrump.add(hardness);
@@ -206,9 +211,9 @@ public class GameGui extends JFrame implements ActionListener{
                     centerPanel.add(clickedButton);
                     displayCurrentInfo.remove(displayCurrentCardText);
                     displayCurrentInfo.add(displayTrump);
+                    tempCardObject = cardObject;
                     revalidate();
                     repaint();
-                    tempCardObject = cardObject;
                 }
 
                 //ELSE Trump card is played...
@@ -218,38 +223,25 @@ public class GameGui extends JFrame implements ActionListener{
                         aPlayer.setPlayerTurnStatus(true);
                     }
                     titlePanel.remove(displayPassedPlayers);
-                    currentTrump = ((SuperTrumpCard) cardObject).getSuperTrumpCardCat(currentTrumpName, playerList.get(currentPlayerIndex));
-                    currentDoubleValue = 0;
-                    currentStringValue = "Nothing!";
+                    //currentTrump = ((SuperTrumpCard) cardObject).getSuperTrumpCardCat(currentTrumpName, playerList.get(currentPlayerIndex));
+                    //currentDoubleValue = 0;
+                    //currentStringValue = "Nothing!";
+                    tempCardObject = cardObject;
+                    newMethod();
 
-                    if (currentTrump.equals("None")) {
-                        playerList.get(currentPlayerIndex).setPlayerGameStatus(false);
-                        secondHeader.setText("Player " + (currentPlayerIndex +1) + " has finished the game by playing the SuperTrump card 'The Geophysicist' with the Magnetite card!");
-                        finishedPlayerList.add((currentPlayerIndex +1));
-                        finishedPlayers += 1;
-                        currentTrumpName = null;
-                        playerPassCount = 0;
-                        playerCount -= 1;
-
-                        //IF statement used to determine how many players are left. One player remaining ends the game loop.
-                        if (finishedPlayers > playerCount) {
-                            //runGame = false;
-                        }
+                    //Displaying the card that the player has played for the turn and removing it from the player hand.
+                    secondHeader.setText("<html><div style='text-align: center;'>Player " + (currentPlayerIndex +1) + " has played the Trump Card: " + currentTrumpName + "<br>Player " + (currentPlayerIndex +1) + " gets another turn! All players get their turns back as well!</div></html>");
+                    if (currentTrump.equals("Cleavage") || currentTrump.equals("Crystal Abundance") || currentTrump.equals("Economic Value")) {
+                        displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump cat is: " + currentTrump + "<br>The current value is: " + currentStringValue + " </div></html>");
                     } else {
-                        //Displaying the card that the player has played for the turn and removing it from the player hand.
-                        secondHeader.setText("<html><div style='text-align: center;'>Player " + (currentPlayerIndex +1) + " has played the Trump Card: " + currentTrumpName + "<br>Player " + (currentPlayerIndex +1) + " gets another turn! All players get their turns back as well!</div></html>");
-                        if (currentTrump.equals("Cleavage") || currentTrump.equals("Crystal Abundance") || currentTrump.equals("Economic Value")) {
-                            displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump cat is: " + currentTrump + "<br>The current value is: " + currentStringValue + " </div></html>");
-                        } else {
-                            displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump cat is: " + currentTrump + "<br>The current value is: " + currentDoubleValue + " </div></html>");
-                        }
-                        playerList.get(currentPlayerIndex).getPlayerHand().remove(cardObject);
-                        playerPassCount = 0;
-                        //Allowing the player to get another turn, as per game mechanics of playing a Trump card.
-                        //System.out.println("Player " + (currentPlayerIndex +1) + " has played a super trump card, starting a new round!");
-                        checkWinCondition();
-                        revalidate();
-                        repaint();
+                        displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump cat is: " + currentTrump + "<br>The current value is: " + currentDoubleValue + " </div></html>");
+                    }
+                    playerList.get(currentPlayerIndex).getPlayerHand().remove(cardObject);
+                    playerPassCount = 0;
+                    if(!currentTrumpName.equals("The Geologist")){
+                    checkWinCondition();
+                    revalidate();
+                    repaint();
                     }
                 }
             }else{
@@ -259,7 +251,8 @@ public class GameGui extends JFrame implements ActionListener{
                         footer.setText("<html>The card you want to play has a lower value than the card in play!<br> Please select another card.</html>");
                     }
                     else{
-                        currentTrumpName = tempCardObject.getMineralName();
+                        tempCardObject = cardObject;
+                        currentTrumpName =cardObject.getMineralName();
                         changeTrumpValue(currentTrump, (MineralCard) cardObject);
                         secondHeader.setText("Player " + (currentPlayerIndex +1) + " has played " + cardObject);
                         playerList.get(currentPlayerIndex).getPlayerHand().remove(cardObject);
@@ -280,9 +273,12 @@ public class GameGui extends JFrame implements ActionListener{
                         aPlayer.setPlayerTurnStatus(true);
                     }
                     titlePanel.remove(displayPassedPlayers);
-                    currentTrump = ((SuperTrumpCard) cardObject).getSuperTrumpCardCat(currentTrumpName, playerList.get(currentPlayerIndex));
-                    currentDoubleValue = 0;
-                    currentStringValue = "Nothing!";
+                    //currentTrump = ((SuperTrumpCard) cardObject).getSuperTrumpCardCat(currentTrumpName, playerList.get(currentPlayerIndex));
+                    //currentDoubleValue = 0;
+                    //currentStringValue = "Nothing!";
+                    tempCardObject = cardObject;
+
+                    newMethod();//IF ELSE to execute the trump cards
 
                     secondHeader.setText("<html>Player " + (currentPlayerIndex +1) + " has played the Trump Card: " + currentTrumpName + "<br>Player " + (currentPlayerIndex +1) + " gets another turn! All players get their turns back as well!</html>");
                     if (currentTrump.equals("Cleavage") || currentTrump.equals("Crystal Abundance") || currentTrump.equals("Economic Value")) {
@@ -292,9 +288,11 @@ public class GameGui extends JFrame implements ActionListener{
                     }
                     playerList.get(currentPlayerIndex).getPlayerHand().remove(cardObject);
                     playerPassCount = 0;
-                    System.out.println("Player " + (currentPlayerIndex +1) + " has played a super trump card, starting a new round!");
-                    checkWinCondition();
-                    //if (!playerList.get(currentPlayerIndex).getPlayerHand().isEmpty()){ }
+                    if(!currentTrumpName.equals("The Geologist")) {
+                        checkWinCondition();
+                        revalidate();
+                        repaint();
+                    }
                 }
             }
         }
@@ -340,6 +338,8 @@ public class GameGui extends JFrame implements ActionListener{
             displayCurrentInfo.add(displayCurrentCardText);
 
             currentTrumpName = tempCardObject.getMineralName();
+            if(tempCardObject instanceof MineralCard) {
+
             changeTrumpValue(currentTrump, (MineralCard) tempCardObject);
 
             //Displaying the card that the player has played for the turn, then removing it from the player hand.
@@ -352,6 +352,7 @@ public class GameGui extends JFrame implements ActionListener{
                 displayCurrentCardText.setText("<html><div style='text-align: center;'>The current Trump cat is: " + currentTrump + "<br>The current value is: " + currentDoubleValue + " </div></html>");
             }
             footer.setText("Select a card to play or draw a card and pass");
+            }
             checkWinCondition();
             revalidate();
             repaint();
@@ -410,6 +411,8 @@ public class GameGui extends JFrame implements ActionListener{
     public void checkPlayerStatus(){
         if (playerList.get(currentPlayerIndex).getPlayerTurnStatus() && (playerPassCount == (playerCount - 1))) {
             secondHeader.setText("Every other player has passed! You are free to play any cards.");
+            displayCurrentCardText.setText("");
+            footer.setText("Please select a card to play!");
             currentTrumpName = null;
             currentTrump = null;
             currentDoubleValue = 0;
@@ -492,6 +495,64 @@ public class GameGui extends JFrame implements ActionListener{
             case "Economic Value":
                 decidingTrumpValue = playedCard.getMineralEvValue(playedCard.getMineralEcoValue());
         }
+    }
+
+    private void newMethod(){
+
+        switch(currentTrumpName) {
+            //Case for super trump card "The Geophysicist"
+            case "The Geophysicist":
+                //Checking the player hand for the specific Card object Magnetite
+                for (int i = 0; i< playerList.get(currentPlayerIndex).getPlayerHand().size(); i++){
+                    //If the player hand does contain the Card Magnetite...
+                    if (playerList.get(currentPlayerIndex).getPlayerHand().get(i).getMineralName().equals("Magnetite")){
+
+                        //IF the player chooses to play the trump card with the Magnetite card
+                        secondHeader.setText("You have the Magnetite card in your hand, do you wish to play it and win the game?");
+                        centerPanel.removeAll();
+                        centerPanel.add(cardToButtonMap.get(tempCardObject));
+                        displayCurrentInfo.removeAll();
+                        displayCurrentInfo.add(magWinCond1);
+                        displayCurrentInfo.add(magWinCond2);
+                        revalidate();
+                        repaint();
+                        //ELSE the player chooses not to play the trump card with the Magnetite card
+                    }
+                    //ELSE the player hand does not contain the Card Magnetite...
+                    else{
+                        currentTrump = "Specific Gravity";
+                    }
+                }
+
+            //Case for super trump card "The Geologist"
+            case "The Geologist":
+                secondHeader.setText("You have played The Geologist! You get to change the current Trump Category!");
+                centerPanel.removeAll();
+                centerPanel.add(cardToButtonMap.get(tempCardObject));
+                displayCurrentInfo.removeAll();
+                displayCurrentInfo.add(displayTrump);
+                revalidate();
+                repaint();
+
+            //Case for the super trump card "The Mineralogist"
+            case "The Mineralogist":
+                currentTrump = "Cleavage";
+                break;
+            //Case for the super trump card "The Gemmologist"
+            case "The Gemmologist":
+                currentTrump = "Hardness";
+                break;
+            //Case for the super trump card "The Petrologist"
+            case "The Petrologist":
+                currentTrump = "Crystal Abundance";
+                break;
+            //Case for the super trump card "The Miner"
+            case "The Miner":
+                currentTrump = "Economic Value";
+                break;
+        }
+        currentDoubleValue = 0.0;
+        currentStringValue = "Nothing!";
     }
 
     public static void main(String[] args) throws IOException {
