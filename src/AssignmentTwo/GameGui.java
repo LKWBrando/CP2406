@@ -164,7 +164,7 @@ public class GameGui extends JFrame implements ActionListener{
         add(southPanel, BorderLayout.SOUTH);
 
         //Reading files and creating MineralCard objects.
-        FileReader readFile = new FileReader("C:\\Users\\user\\IdeaProjects\\CP2406\\card.txt");
+        FileReader readFile = new FileReader(".\\card.txt");
         BufferedReader newFileLine = new BufferedReader(readFile);
         String nextLine;
         while ((nextLine = newFileLine.readLine()) != null){
@@ -192,7 +192,7 @@ public class GameGui extends JFrame implements ActionListener{
         cardDeck.add(theGeologist);
 
         ArrayList<String> imageFileLocation = new ArrayList<String>(); //Arraylist to store the string values of the file names
-        File[] imageFiles = new File("C:\\Users\\user\\IdeaProjects\\CP2406\\a2_images").listFiles();
+        File[] imageFiles = new File(".\\a2_images").listFiles();
         for (File fileName : imageFiles) {
             imageFileLocation.add(fileName.getName());
         }
@@ -200,7 +200,7 @@ public class GameGui extends JFrame implements ActionListener{
         ArrayList<JButton> cardImageList = new ArrayList<JButton>(); //Arraylist to store the JButtons containing the images of the card objects
         //Creating Jbuttons based on mineral images
         for (int i = 0; i < cardDeck.size(); i++) {
-            BufferedImage newImage = ImageIO.read(new File("C:\\Users\\user\\IdeaProjects\\CP2406\\a2_images\\" + imageFileLocation.get(i)));
+            BufferedImage newImage = ImageIO.read(new File(".\\a2_images\\" + imageFileLocation.get(i)));
             ImageIcon newIcon = new ImageIcon(newImage.getScaledInstance(150, 300, Image.SCALE_SMOOTH));
             JButton newButton = new JButton(newIcon);
             newButton.setPreferredSize(new Dimension(150,300));
